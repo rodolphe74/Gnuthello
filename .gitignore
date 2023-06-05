@@ -1,3 +1,6 @@
+# Uncrust
+*.~ 
+
 # Prerequisites
 *.d
 
