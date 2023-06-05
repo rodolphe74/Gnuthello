@@ -1,0 +1,8 @@
+%clang
+%objective-c -std=gnu11
+%objective-cpp -std=gnu++14
+
+-I. 
+-I/home/rodoc/GNUstep/Library/Headers 
+-I/usr/local/include/GNUstep 
+-I/usr/include/GNUstep

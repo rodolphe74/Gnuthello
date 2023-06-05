@@ -1,0 +1,36 @@
+x11perf - X11 performance program, version 1.2
+The X.Org Foundation server version 12014000 on :0
+from DESKTOP-U9FULQS
+Sun Jun  4 07:45:24 2023
+
+Sync time adjustment is 1.0664 msecs.
+
+      36000 reps @   0.1521 msec (  6570.0/sec): Move window (4 kids)
+      36000 reps @   0.1496 msec (  6680.0/sec): Move window (4 kids)
+      36000 reps @   0.1489 msec (  6710.0/sec): Move window (4 kids)
+      36000 reps @   0.1478 msec (  6760.0/sec): Move window (4 kids)
+      36000 reps @   0.1453 msec (  6880.0/sec): Move window (4 kids)
+     180000 trep @   0.1488 msec (  6720.0/sec): Move window (4 kids)
+
+      48000 reps @   0.1384 msec (  7230.0/sec): Move window (16 kids)
+      48000 reps @   0.1343 msec (  7440.0/sec): Move window (16 kids)
+      48000 reps @   0.1372 msec (  7290.0/sec): Move window (16 kids)
+      48000 reps @   0.1377 msec (  7260.0/sec): Move window (16 kids)
+      48000 reps @   0.1389 msec (  7200.0/sec): Move window (16 kids)
+     240000 trep @   0.1373 msec (  7280.0/sec): Move window (16 kids)
+
+      50000 reps @   0.1353 msec (  7390.0/sec): Move window (25 kids)
+      50000 reps @   0.1376 msec (  7270.0/sec): Move window (25 kids)
+      50000 reps @   0.1351 msec (  7400.0/sec): Move window (25 kids)
+      50000 reps @   0.1358 msec (  7370.0/sec): Move window (25 kids)
+      50000 reps @   0.1366 msec (  7320.0/sec): Move window (25 kids)
+     250000 trep @   0.1360 msec (  7350.0/sec): Move window (25 kids)
+
+      40000 reps @   0.1437 msec (  6960.0/sec): Move window (50 kids)
+      40000 reps @   0.1526 msec (  6550.0/sec): Move window (50 kids)
+      40000 reps @   0.1484 msec (  6740.0/sec): Move window (50 kids)
+      40000 reps @   0.1410 msec (  7090.0/sec): Move window (50 kids)
+      40000 reps @   0.1432 msec (  6980.0/sec): Move window (50 kids)
+     200000 trep @   0.1458 msec (  6860.0/sec): Move window (50 kids)
+
+      37500 reps @   0.1560 msec (  6410.0/sec): Move window (75 kids)
