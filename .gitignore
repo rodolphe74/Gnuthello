@@ -1,8 +1,8 @@
 # Uncrust
-*.~ 
+*.*~ 
 
 # ccls
-.ccsl
+.ccls
 
 # Prerequisites
 *.d
