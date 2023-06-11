@@ -5,6 +5,7 @@
 @synthesize children;
 @synthesize iValue;
 @synthesize strValue;
+@synthesize object;
 - (id)init
 {
 	if (self = [super init]) { // equivalent to "self does not equal nil"
@@ -13,6 +14,7 @@
 		children = [NSMutableArray new];
 		iValue = 0;
 		[strValue initWithString:@""];
+		object = nil;
 	}
 	return self;
 }
@@ -40,6 +42,7 @@
 - (void)dealloc
 {
 	NSLog(@"deallocating TreeNode at %p", self);
+	[strValue release];
 	[children removeAllObjects];
 	[children release];
 	[super dealloc];

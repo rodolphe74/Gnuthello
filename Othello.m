@@ -187,12 +187,15 @@
 			[Othello logStroke:stk];
 
 			// build tree
-			TreeNode *tn = [[[TreeNode alloc] initWithInt:count++] autorelease];
+			int eval = [stk evaluate];
+			TreeNode *tn = [[[TreeNode alloc] initWithInt:eval] autorelease];
+			[tn setStrValue:[NSString stringWithFormat:@"%d", count++]];
+			[tn setObject:stk];
 			[t addChild:[stk parent] withChild:tn];
-            [stk setParent:tn];
+			[stk setParent:tn];
 
 			if ([stk depth] == depth) {
-				int eval = [stk evaluate];
+				// int eval = [stk evaluate];
 				NSLog(@"Depth:%d  eval:%d  stack:%d", depth, eval, [s count]);
 
 				// [Othello logStroke:stk];
