@@ -25,8 +25,6 @@ int main()
 		 */
 
 		PdfOut *pdfOut = [PdfOut new];
-		[pdfOut save:@"out.pdf"];
-		[pdfOut release];
 
 		TreeNode *a = [[[TreeNode alloc] initWithString:@"A"] autorelease];
 		TreeNode *b = [[[TreeNode alloc] initWithString:@"B"] autorelease];
@@ -72,6 +70,10 @@ int main()
 		Othello *othello = [[Othello new] autorelease];
 		[Othello logStroke:[othello stroke]];
 		[othello exoticBlackSearch:5];
+
+		[pdfOut drawStroke:[othello stroke] atX:0 andY:0];
+		[pdfOut save:@"out.pdf"];
+		[pdfOut release];
 
 		/*
 		 *  NSArray *moves = [othello listStrokes:BLACK];
