@@ -13,7 +13,7 @@ LDFLAGS = -Wl,--no-as-needed -lgnustep-base -lobjc -lm pdfgen.o
 $(info $$SOURCES is [${SOURCES}])
 $(info $$OBJECTS is [${OBJECTS}])
 
-all: $(OBJECTS) main pack
+all: $(OBJECTS) pdfgen main pack
 
 $(OBJECTS): %.o : %.m
 	$(CC) $(CFLAGS) -c $< -o $@
