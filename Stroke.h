@@ -24,14 +24,14 @@ typedef struct _Coord {
 	int evaluation;
 	Coord from, to;
 	int depth;
-	Stroke **path;
+	// Stroke **path;
 	TreeNode *parent;
 }
 @property (nonatomic, readwrite, assign) PIECE *board;
 @property (nonatomic, readwrite, assign) Coord from, to;
 @property (nonatomic, readwrite, assign) int evaluation;
 @property (nonatomic, readwrite, assign) int depth;
-@property (nonatomic, readwrite, assign) Stroke **path;
+// @property (nonatomic, readwrite, assign) Stroke **path;
 @property (nonatomic, readwrite, assign) TreeNode *parent;
 - (int)evaluate;
 @end

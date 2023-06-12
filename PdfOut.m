@@ -68,39 +68,32 @@
 	}
 }
 
-/*
- *  - (void)drawStroke:(Stroke *)stroke atX:(float)atx andY:(float)aty;
- *  {
- *   int x1, y1, x2, y2;
- *
- *   for (int i = 0; i <= 8; i++) {
- *       x1 = atx;
- *       x2 = atx + 8 * 6;
- *       y1 = aty + i * 6;
- *       y2 = aty + i * 6;
- *       pdf_add_line(pdf, NULL, x1, y1, x2, y2, 1.0f, PDF_BLACK);
- *
- *       x1 = atx + i * 6;
- *       x2 = atx + i * 6;
- *       y1 = aty;
- *       y2 = aty + 8 * 6;
- *       pdf_add_line(pdf, NULL, x1, y1, x2, y2, 1.0f, PDF_BLACK);
- *   }
- *
- *   for (int y = 0; y < 8; y++) {
- *       for (int x = 0; x < 8; x++) {
- *           if ([stroke board][INDEX(x, y)] == WHITE) {
- *               pdf_add_circle(pdf, NULL, (x+1) * 6 + atx - 3, ((7-y)+1) * 6 + aty - 3, 2.0f, 1.0f, PDF_BLACK, PDF_WHITE);
- *           }
- *           else if ([stroke board][INDEX(x, y)] == BLACK) {
- *               pdf_add_circle(pdf, NULL, (x+1) * 6 + atx - 3, ((7-y)+1) * 6 + aty - 3, 2.0f, 1.0f, PDF_BLACK, PDF_BLACK);
- *           }
- *           else {
- *               // Empty
- *           }
- *       }
- *   }
- *  }
- */
+- (void)drawTree:(TreeNode *)root fromAngle:(double)alfa toAngle:(double)beta
+{
+/* Given a rooted tree T, a vertex v ∈ V (T), and the angles α and β
+ *  that define v’s annulus wedge, the algorithm calculates the position of every
+ *  child vertex c of v in a new graph drawing Γ. R0 is the user-defined radius
+ *  of the innermost concentric circle. ξ is the user-defined delta angle constant
+ *  for the drawing’s concentric circles. The initial values for α and β for the
+ *  root’s annulus wedge are 0° and 360°, respectively */
+
+	if ([[root object] depth] == 1) {
+		// root
+		NSLog(@"root");
+	}
+
+	int depthOfVertex = [[root object] depth];
+	double theta = alfa;
+	double radius = CIRCLE_RADIUS + (DELTA * depthOfVertex);
+
+    for (int i = 0; i < [[root children] count]; i++) {
+        TreeNode *child = [[root children] objectAtIndex:i];
+        NSMutableDictionary *dic = [NSMutableDictionary new];
+		[dic setValue:[NSNumber numberWithInt:0] forKey:@"value"];
+		[Tree preOrderTraversal:root withSelector:@"countLeaves:withCounter:" andObject:dic];
+        [dic release];
+    }
+
+}
 
 @end

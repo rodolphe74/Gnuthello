@@ -7,14 +7,14 @@
 @synthesize evaluation;
 @synthesize from, to;
 @synthesize depth;
-@synthesize path;
+// @synthesize path;
 @synthesize parent;
 - (id)init
 {
 	if (self = [super init]) {
 		NSLog(@"Stroke init at %p", self);
 		board = (PIECE *)malloc(sizeof(PIECE) * 8 * 8);
-		path = (Stroke **)malloc(sizeof(Stroke *) * MAX_DEPTH);
+// 		path = (Stroke **)malloc(sizeof(Stroke *) * MAX_DEPTH);
 	}
 	return self;
 }
@@ -23,7 +23,7 @@
 {
 	NSLog(@"Stroke dealloc at %p", self);
 	free(board);
-	free(path);
+//	free(path);
 	[super dealloc];
 }
 
@@ -37,7 +37,7 @@
 	strokeCopy->from = from;
 	strokeCopy->to = to;
 	// [strokeCopy setPath:[NSMutableArray arrayWithArray:path]];
-	memcpy([strokeCopy path], [self path], sizeof(Stroke *) * MAX_DEPTH);
+	// memcpy([strokeCopy path], [self path], sizeof(Stroke *) * MAX_DEPTH);
 
 	// NSLog(@"Copying Stroke at %p to %p", self, strokeCopy);
 	return strokeCopy;

@@ -176,8 +176,6 @@
 
 	[rootStroke setParent:[t root]];
 	[s push:rootStroke];
-	int maxEval = INT_MIN;
-	Stroke *maxPath[MAX_DEPTH];
 
 	@autoreleasepool {
 		// purge autoreleased moves lists at every search
@@ -195,23 +193,12 @@
 			[stk setParent:tn];
 
 			if ([stk depth] == depth) {
-				// int eval = [stk evaluate];
+				// stop pushing
 				NSLog(@"Depth:%d  eval:%d  stack:%d", depth, eval, [s count]);
-
-				// [Othello logStroke:stk];
-				if (eval > maxEval) {
-					maxEval = eval;
-					[stk path][[stk depth] - 1] = stk; // path node
-					// save path (list of previous)
-					NSLog(@"Array size %lu  Eval:%d", sizeof(Stroke *) * MAX_DEPTH, eval);
-					// [Othello logStroke:[stk path][1]];
-					memcpy(maxPath, [stk path], sizeof(Stroke *) * MAX_DEPTH);
-				}
 			}
 			else {
 				// BLACK or WHITE ? [stk depth odd or not]
 				NSLog(@"Color %d", (([stk depth] % 2 == 0) ? BLACK : WHITE));
-				// NSArray *moves = [self listStrokes:(([stk depth] % 2 == 0) ? BLACK : WHITE)];
 				NSArray *moves = [self listStrokesForColor:(([stk depth] % 2 == 0) ? BLACK : WHITE) withStroke:stk];
 				NSLog(@"moves %lu", [moves count]);
 
@@ -221,20 +208,14 @@
 					[currentStk setParent:[stk parent]];
 					// save previous (stk) in currentStk
 					NSLog(@"inserting previous stroke at %d", [stk depth] - 1);
-					[currentStk path][[stk depth] - 1] = stk;
 					[s push:currentStk];
 				}
 			}
 		}
 
 		NSLog(@"Best path:");
-
-		for (int i = 0; i < depth; i++) {
-			[Othello logStroke:maxPath[i]];
-		}
 	}
 
-	// [t preOrderTraversal:[t root] withSelector:@"debugNode:"];
 	NSMutableString *indentString = [[NSMutableString alloc] initWithString:@""];
 
 	[Tree debugTree:[t root] withIndent:indentString isLast:YES];
@@ -242,7 +223,6 @@
 	[t release];
 	[s release];
 	[rootStroke release];
-	// return bestEval
 }
 
 + (void)logStroke:(Stroke *)s

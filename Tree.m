@@ -49,7 +49,7 @@
 	return p;
 }
 
-- (void)preOrderTraversal:(TreeNode *)startNode withSelector:(NSString *)selector andObject:(id)object
++ (void)preOrderTraversal:(TreeNode *)startNode withSelector:(NSString *)selector andObject:(id)object
 {
 	Class klass = NSClassFromString(@"Tree");
 	SEL sel = NSSelectorFromString(selector);
@@ -72,7 +72,7 @@
 	[s release];
 }
 
-- (void)postOrderTraversal:(TreeNode *)startNode withSelector:(NSString *)selector andObject:(id)object
++ (void)postOrderTraversal:(TreeNode *)startNode withSelector:(NSString *)selector andObject:(id)object
 {
 	Class klass = NSClassFromString(@"Tree");
 	SEL sel = NSSelectorFromString(selector);
@@ -103,7 +103,7 @@
 		NSDictionary *temp = [s pop];
 		// NSLog(@"*>%@", [[temp objectForKey:@"node"] strValue]);
 		TreeNode *t = [temp objectForKey:@"node"];
-        [klass performSelector:sel withObject:t withObject:object];
+		[klass performSelector:sel withObject:t withObject:object];
 
 		while ([s count] > 0 && [[temp objectForKey:@"index"] intValue] == [[[[s peek] objectForKey:@"node"] children] count] - 1) {
 			temp = [s pop];
@@ -123,7 +123,7 @@
 	[s release];
 }
 
-- (void)inOrderTraversalR:(TreeNode *)startNode withSelector:(NSString *)selector andObject:(id)object
++ (void)inOrderTraversalR:(TreeNode *)startNode withSelector:(NSString *)selector andObject:(id)object
 {
 	Class klass = NSClassFromString(@"Tree");
 	SEL sel = NSSelectorFromString(selector);
@@ -140,13 +140,13 @@
 	}
 
 	for (int i = 0; i < total - 1; i++) {
-		[self inOrderTraversalR:[[startNode children] objectAtIndex:i] withSelector:selector andObject:object];
+		[Tree inOrderTraversalR:[[startNode children] objectAtIndex:i] withSelector:selector andObject:object];
 	}
 
-    [klass performSelector:sel withObject:startNode withObject:object];
+	[klass performSelector:sel withObject:startNode withObject:object];
 
 	// Last child
-	[self inOrderTraversalR:[[startNode children] objectAtIndex:total - 1] withSelector:selector andObject:object];
+	[Tree inOrderTraversalR:[[startNode children] objectAtIndex:total - 1] withSelector:selector andObject:object];
 }
 
 + (void)debugNode:(TreeNode *)node
