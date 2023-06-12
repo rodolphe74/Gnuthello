@@ -85,13 +85,26 @@
 	int depthOfVertex = [[root object] depth];
 	double theta = alfa;
 	double radius = CIRCLE_RADIUS + (DELTA * depthOfVertex);
-
+    NSMutableDictionary *dic = [NSMutableDictionary new];
+    [dic setValue:[NSNumber numberWithInt:0] forKey:@"value"];
+    [Tree preOrderTraversal:root withSelector:@"countLeaves:withCounter:" andObject:dic];
+    int leavesNumber = [[dic valueForKey:@"value"] intValue];
+    [dic release];
     for (int i = 0; i < [[root children] count]; i++) {
         TreeNode *child = [[root children] objectAtIndex:i];
         NSMutableDictionary *dic = [NSMutableDictionary new];
 		[dic setValue:[NSNumber numberWithInt:0] forKey:@"value"];
 		[Tree preOrderTraversal:root withSelector:@"countLeaves:withCounter:" andObject:dic];
+        int lambda = [[dic valueForKey:@"value"] intValue];
         [dic release];
+        double mi = theta + ((double) lambda / leavesNumber * (beta - alfa));
+        double x = radius * cos((theta + mi) / 2.0);
+        double y = radius * sin((theta + mi) / 2.0);
+        NSLog(@"child.X=%f  child.Y=%f  radius=%f  parent=%@", x, y, radius, [root strValue]);
+
+        if ([[child children] count] > 0) {
+            [self drawTree:child fromAngle:theta toAngle:mi];
+        }
     }
 
 }
