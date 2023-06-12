@@ -52,16 +52,24 @@ int main()
 		/*
 		 *    TreeNode *p = [t findParent:e fromNode:f];
 		 *    NSLog(@"P:%@", [p strValue]);
-		 *
-		 *    NSLog(@"PreOrder");
-		 *    [t preOrderTraversal:[t root] withSelector:@"debugNode:"];
-		 *
-		 *    NSLog(@"PostOrder");
-		 *    [t postOrderTraversal:[t root] withSelector:@"debugNode:"];
-		 *
-		 *    NSLog(@"InOrder");
-		 *    [t inOrderTraversalR:[t root] withSelector:@"debugNode:"];
 		 */
+		NSLog(@"PreOrder");
+		NSMutableDictionary *dic = [NSMutableDictionary new];
+		[dic setValue:[NSNumber numberWithInt:0] forKey:@"value"];
+		[t preOrderTraversal:[t root] withSelector:@"countLeaves:withCounter:" andObject:dic];
+		NSLog(@"Found %d leaves", [[dic valueForKey:@"value"] intValue]);
+		[dic release];
+
+		[t preOrderTraversal:[t root] withSelector:@"debugNode:" andObject:nil];
+
+		NSLog(@"PostOrder");
+		[t postOrderTraversal:[t root] withSelector:@"debugNode:" andObject:nil];
+
+		NSLog(@"InOrder");
+		[t inOrderTraversalR:[t root] withSelector:@"debugNode:" andObject:nil];
+
+        exit(1);
+
 		NSMutableString *indent = [[NSMutableString alloc] initWithString:@""];
 		[Tree debugTree:[t root] withIndent:indent isLast:YES];
 		[indent release];

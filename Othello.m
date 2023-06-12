@@ -234,7 +234,7 @@
 		}
 	}
 
-	[t preOrderTraversal:[t root] withSelector:@"debugNode:"];
+	// [t preOrderTraversal:[t root] withSelector:@"debugNode:"];
 	NSMutableString *indentString = [[NSMutableString alloc] initWithString:@""];
 
 	[Tree debugTree:[t root] withIndent:indentString isLast:YES];

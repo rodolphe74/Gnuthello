@@ -10,9 +10,10 @@
 - (void)dealloc;
 - (void)addChild:(TreeNode *)parent withChild:(TreeNode *)child;
 - (TreeNode *)findParent:(TreeNode *)node fromNode:(TreeNode *)startNode;
-- (void)preOrderTraversal:(TreeNode *)startNode withSelector:(NSString *)selector;
-- (void)postOrderTraversal:(TreeNode *)startNode withSelector:(NSString *)selector;
-- (void)inOrderTraversalR:(TreeNode *)startNode withSelector:(NSString *)selector;
+- (void)preOrderTraversal:(TreeNode *)startNode withSelector:(NSString *)selector andObject:(id)object;
+- (void)postOrderTraversal:(TreeNode *)startNode withSelector:(NSString *)selector andObject:(id)object;
+- (void)inOrderTraversalR:(TreeNode *)startNode withSelector:(NSString *)selector andObject:(id)object;
 + (void)debugNode:(TreeNode *)node;
++ (void)countLeaves:(TreeNode *)node withCounter:(id)leavesCounter;
 + (void)debugTree:(TreeNode *)root withIndent:(NSMutableString *)indentString isLast:(bool)isLast;
 @end

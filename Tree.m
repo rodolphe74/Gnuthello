@@ -49,7 +49,7 @@
 	return p;
 }
 
-- (void)preOrderTraversal:(TreeNode *)startNode withSelector:(NSString *)selector
+- (void)preOrderTraversal:(TreeNode *)startNode withSelector:(NSString *)selector andObject:(id)object
 {
 	Class klass = NSClassFromString(@"Tree");
 	SEL sel = NSSelectorFromString(selector);
@@ -61,7 +61,7 @@
 	while ([s count] > 0) {
 		TreeNode *t = [s pop];
 		// NSLog(@"Traversing TreeNode %@", [t strValue]);
-		[klass performSelector:sel withObject:t];
+		[klass performSelector:sel withObject:t withObject:object];
 
 		for (int i = [[t children] count] - 1; i >= 0; i--) {
 			TreeNode *c = [[t children] objectAtIndex:i];
@@ -72,7 +72,7 @@
 	[s release];
 }
 
-- (void)postOrderTraversal:(TreeNode *)startNode withSelector:(NSString *)selector
+- (void)postOrderTraversal:(TreeNode *)startNode withSelector:(NSString *)selector andObject:(id)object
 {
 	Class klass = NSClassFromString(@"Tree");
 	SEL sel = NSSelectorFromString(selector);
@@ -103,7 +103,7 @@
 		NSDictionary *temp = [s pop];
 		// NSLog(@"*>%@", [[temp objectForKey:@"node"] strValue]);
 		TreeNode *t = [temp objectForKey:@"node"];
-		[klass performSelector:sel withObject:t];
+        [klass performSelector:sel withObject:t withObject:object];
 
 		while ([s count] > 0 && [[temp objectForKey:@"index"] intValue] == [[[[s peek] objectForKey:@"node"] children] count] - 1) {
 			temp = [s pop];
@@ -123,7 +123,7 @@
 	[s release];
 }
 
-- (void)inOrderTraversalR:(TreeNode *)startNode withSelector:(NSString *)selector
+- (void)inOrderTraversalR:(TreeNode *)startNode withSelector:(NSString *)selector andObject:(id)object
 {
 	Class klass = NSClassFromString(@"Tree");
 	SEL sel = NSSelectorFromString(selector);
@@ -140,18 +140,29 @@
 	}
 
 	for (int i = 0; i < total - 1; i++) {
-		[self inOrderTraversalR:[[startNode children] objectAtIndex:i] withSelector:selector];
+		[self inOrderTraversalR:[[startNode children] objectAtIndex:i] withSelector:selector andObject:object];
 	}
 
-	[klass performSelector:sel withObject:startNode];
+    [klass performSelector:sel withObject:startNode withObject:object];
 
 	// Last child
-	[self inOrderTraversalR:[[startNode children] objectAtIndex:total - 1] withSelector:selector];
+	[self inOrderTraversalR:[[startNode children] objectAtIndex:total - 1] withSelector:selector andObject:object];
 }
 
 + (void)debugNode:(TreeNode *)node
 {
 	NSLog(@"Node at %p = [%@,%d]", node, [node strValue], [node iValue]);
+}
+
++ (void)countLeaves:(TreeNode *)node withCounter:(id)leavesCounter
+{
+	if ([[node children] count] == 0) {
+		NSNumber *n = [leavesCounter objectForKey:@"value"];
+		int currentValue = [n intValue];
+		NSLog(@"currentValue:%d at %@", currentValue, [node strValue]);
+		currentValue++;
+		[leavesCounter setValue:[NSNumber numberWithInt:currentValue] forKey:@"value"];
+	}
 }
 
 + (void)debugTree:(TreeNode *)root withIndent:(NSMutableString *)indentString isLast:(bool)isLast
