@@ -1,4 +1,5 @@
 #import <Foundation/Foundation.h>
+#import <math.h>
 #import "Othello.h"
 #import "Tree.h"
 #import "PdfOut.h"
@@ -37,6 +38,17 @@ int main()
 		TreeNode *i = [[[TreeNode alloc] initWithString:@"I"] autorelease];
 		TreeNode *k = [[[TreeNode alloc] initWithString:@"K"] autorelease];
 
+		[f setDepth:1];
+		[b setDepth:2];
+		[g setDepth:2];
+		[a setDepth:3];
+		[k setDepth:3];
+		[d setDepth:3];
+		[i setDepth:3];
+		[c setDepth:4];
+		[e setDepth:4];
+		[h setDepth:4];
+
 		NSLog(@"%@", [f strValue]);
 		Tree *t = [[Tree alloc] initWithRoot:f];
 		[t addChild:f withChild:b];
@@ -49,11 +61,15 @@ int main()
 		[t addChild:g withChild:i];
 		[t addChild:i withChild:h];
 
+		[pdfOut drawTree:[t root] fromAngle:0 toAngle:2 * M_PI];
+
+		// exit(1);
+
 		/*
 		 *    TreeNode *p = [t findParent:e fromNode:f];
 		 *    NSLog(@"P:%@", [p strValue]);
 		 */
-		 
+
 		NSLog(@"PreOrder");
 		NSMutableDictionary *dic = [NSMutableDictionary new];
 		[dic setValue:[NSNumber numberWithInt:0] forKey:@"value"];
@@ -62,7 +78,6 @@ int main()
 		[dic release];
 
 		[Tree preOrderTraversal:[t root] withSelector:@"debugNode:" andObject:nil];
-
 
 		NSLog(@"PostOrder");
 		[Tree postOrderTraversal:[t root] withSelector:@"debugNode:" andObject:nil];
@@ -77,7 +92,7 @@ int main()
 
 		Othello *othello = [[Othello new] autorelease];
 		[Othello logStroke:[othello stroke]];
-		[othello exoticBlackSearch:5];
+		[othello exoticBlackSearch:8];
 
 		[pdfOut drawStroke:[othello stroke] atX:0 andY:0];
 		[pdfOut save:@"out.pdf"];

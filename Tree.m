@@ -159,7 +159,7 @@
 	if ([[node children] count] == 0) {
 		NSNumber *n = [leavesCounter objectForKey:@"value"];
 		int currentValue = [n intValue];
-		NSLog(@"currentValue:%d at %@", currentValue, [node strValue]);
+		// NSLog(@"currentValue:%d at %@", currentValue, [node strValue]);
 		currentValue++;
 		[leavesCounter setValue:[NSNumber numberWithInt:currentValue] forKey:@"value"];
 	}

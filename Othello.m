@@ -1,6 +1,7 @@
 #import "Othello.h"
 #import "Stack.h"
 #import "Tree.h"
+#import "PdfOut.h"
 #import <stdint.h>
 
 @implementation Othello
@@ -167,6 +168,8 @@
 	Stack *s = [[Stack alloc]  init];
 
 	TreeNode *root = [[[TreeNode alloc] initWithInt:0] autorelease];
+
+	[root setDepth:1];
 	Tree *t = [[Tree alloc] initWithRoot:root];
 	int count = 1;
 
@@ -189,6 +192,7 @@
 			TreeNode *tn = [[[TreeNode alloc] initWithInt:eval] autorelease];
 			[tn setStrValue:[NSString stringWithFormat:@"%d", count++]];
 			[tn setObject:stk];
+			[tn setDepth:[stk depth]];
 			[t addChild:[stk parent] withChild:tn];
 			[stk setParent:tn];
 
@@ -219,6 +223,12 @@
 	NSMutableString *indentString = [[NSMutableString alloc] initWithString:@""];
 
 	[Tree debugTree:[t root] withIndent:indentString isLast:YES];
+    [[t root] setStrValue:@"ROOT"];
+
+    PdfOut *pdfOut = [PdfOut new];
+    [pdfOut drawTree:[t root] fromAngle:0 toAngle:2*M_PI];
+    [pdfOut save:@"minimax.pdf"];
+    [pdfOut release];
 
 	[t release];
 	[s release];

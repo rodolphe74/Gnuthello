@@ -6,6 +6,7 @@
 @synthesize iValue;
 @synthesize strValue;
 @synthesize object;
+@synthesize depth;
 - (id)init
 {
 	if (self = [super init]) { // equivalent to "self does not equal nil"
@@ -15,6 +16,7 @@
 		iValue = 0;
 		[strValue initWithString:@""];
 		object = nil;
+		depth = 1;
 	}
 	return self;
 }
