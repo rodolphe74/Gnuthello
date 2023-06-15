@@ -14,10 +14,11 @@
 			.date		= "Today"
 		};
 
-		pdf = pdf_create(PDF_A4_WIDTH, PDF_A4_HEIGHT, &info);
+		// pdf = pdf_create(PDF_A4_WIDTH, PDF_A4_HEIGHT, &info);
+		// pdf = pdf_create(PDF_WIDTH, PDF_HEIGHT, &info);
+		pdf = pdf_create(PDF_WIDTH_DEPTH_UNITY * DEPTH, PDF_HEIGHT_DEPTH_UNITY * DEPTH, &info);
 		pdf_set_font(pdf, "Times-Roman");
 		pdf_append_page(pdf);
-		pdf_add_text(pdf, NULL, "This is text", 12, 0, PDF_A4_HEIGHT - 12, PDF_BLACK);
 	}
 	return self;
 }
@@ -37,20 +38,20 @@
 - (void)drawStroke:(Stroke *)stroke atX:(float)atx andY:(float)aty;
 {
 	float x1, y1, x2, y2;
-	float multiplier = .08f;
+	float multiplier = .8f;
 
 	for (int i = 0; i <= 8; i++) {
 		x1 = atx;
 		x2 = atx + 8 * 6 * multiplier;
 		y1 = aty + i * 6 * multiplier;
 		y2 = aty + i * 6 * multiplier;
-		pdf_add_line(pdf, NULL, x1, y1, x2, y2, 1.0f * multiplier, PDF_BLACK);
+		pdf_add_line(pdf, NULL, x1, y1, x2, y2, 0.5f * multiplier, PDF_RGB(192, 192, 192));
 
 		x1 = atx + i * 6 * multiplier;
 		x2 = atx + i * 6 * multiplier;
 		y1 = aty;
 		y2 = aty + 8 * 6 * multiplier;
-		pdf_add_line(pdf, NULL, x1, y1, x2, y2, 1.0f * multiplier, PDF_BLACK);
+		pdf_add_line(pdf, NULL, x1, y1, x2, y2, 0.5f * multiplier, PDF_RGB(192, 192, 192));
 	}
 
 	for (int y = 0; y < 8; y++) {
@@ -68,43 +69,14 @@
 	}
 }
 
-/*
- * 105 105
- *       protected static void CalculatePositions(TreeNode<T> node, float startRadians, float endRadians, float circleRadius, float radialIncrement)
- *       {
- *           float theta = startRadians;
- *           int leavesNumber = BreadthFirstSearch(node);
- *
- *           foreach (var child in node.Children)
- *           {
- *               float lambda = BreadthFirstSearch(child);
- *               float mi = theta + ((lambda / leavesNumber) * (endRadians - startRadians));
- *
- *               float x = (float)(circleRadius * Math.Cos((theta + mi) / 2.0));
- *               float y = (float)(circleRadius * Math.Sin((theta + mi) / 2.0));
- *
- *               child.Point.X = x;
- *               child.Point.Y = y;
- *
- *               if (child.Children.Count > 0)
- *               {
- *                   // RECURSIVE CALL
- *                   CalculatePositions(child, theta, mi, circleRadius + radialIncrement, radialIncrement);
- *               }
- *
- *               theta = mi;
- *           }
- *       }
- */
-
 - (void)computeTree:(TreeNode *)root fromAngle:(double)alfa toAngle:(double)beta withCircleRadius:(double)circleRadius withRadialIncrement:(double)radialIncrement withDic:(NSMutableDictionary *)positions
 {
-/* Given a rooted tree T, a vertex v ∈ V (T), and the angles α and β
- *  that define v’s annulus wedge, the algorithm calculates the position of every
- *  child vertex c of v in a new graph drawing Γ. R0 is the user-defined radius
- *  of the innermost concentric circle. ξ is the user-defined delta angle constant
- *  for the drawing’s concentric circles. The initial values for α and β for the
- *  root’s annulus wedge are 0° and 360°, respectively */
+	/* Given a rooted tree T, a vertex v ∈ V (T), and the angles α and β
+	 *  that define v’s annulus wedge, the algorithm calculates the position of every
+	 *  child vertex c of v in a new graph drawing Γ. R0 is the user-defined radius
+	 *  of the innermost concentric circle. ξ is the user-defined delta angle constant
+	 *  for the drawing’s concentric circles. The initial values for α and β for the
+	 *  root’s annulus wedge are 0° and 360°, respectively */
 
 	NSLog(@"DEPTH %d", [root depth]);
 
@@ -117,13 +89,12 @@
 		[radialPosition setObject:[NSNumber numberWithDouble:0] forKey:@"radius"];
 		[radialPosition setObject:[NSNull null] forKey:@"parent"];
 		[radialPosition setObject:root forKey:@"node"];
-        [radialPosition setObject:[root strValue] forKey:@"title"];
+		[radialPosition setObject:[root strValue] forKey:@"title"];
 		NSValue *objectKey = [NSValue valueWithNonretainedObject:root];
 		[positions setObject:radialPosition forKey:objectKey];
 		[radialPosition release];
 	}
 
-	int depthOfVertex = [root depth];
 	double theta = alfa;
 	NSMutableDictionary *dic = [NSMutableDictionary new];
 
@@ -163,10 +134,14 @@
 	}
 }
 
-- (void)drawTree:(TreeNode *)root fromAngle:(double)alfa toAngle:(double)beta;
+- (void)drawTree:(TreeNode *)root fromAngle:(double)alfa toAngle:(double)beta showStrokes:(bool)showStrokes
 {
-	const int START_X = PDF_A4_WIDTH / 2;
-	const int START_Y = PDF_A4_HEIGHT / 2;
+	/*
+	 *  const int START_X = PDF_WIDTH / 2;
+	 *  const int START_Y = PDF_HEIGHT / 2;
+	 */
+	const int START_X = (PDF_WIDTH_DEPTH_UNITY * DEPTH) / 2;
+	const int START_Y = (PDF_HEIGHT_DEPTH_UNITY * DEPTH) / 2;
 
 	NSMutableDictionary *radialPositions = [NSMutableDictionary new];
 
@@ -200,15 +175,44 @@
 		}
 	}
 
-	// Nodes
+	// Stroke
+	for (int i = 0; i < [keys count] && showStrokes; i++) {
+		id key = [keys objectAtIndex:i];
+		NSDictionary *value = [radialPositions objectForKey:key];
+		TreeNode *node = [value objectForKey:@"node"];
+		Stroke *s = [node object];
+		double x = [[value objectForKey:@"x"] doubleValue];
+		double y = [[value objectForKey:@"y"] doubleValue];
+
+		if (s) {
+			NSLog(@"Drawing stroke %@", [value objectForKey:@"title"]);
+			[self drawStroke:s atX:START_X + x andY:START_Y + y - 12];
+			//NSString *evalString = [NSString stringWithFormat:@"%d", [node iValue]];
+			//pdf_add_text(pdf, NULL, [evalString cString], FONT_SIZE, START_X + x + 42, START_Y + y + 22, PDF_RED);
+		}
+	}
+
+	// Eval
+	int shiftX = 0, shiftY = 0;
+
+	if (showStrokes) {
+		shiftX = 42;
+		shiftY = 22;
+	}
+
 	for (int i = 0; i < [keys count]; i++) {
 		id key = [keys objectAtIndex:i];
 		NSDictionary *value = [radialPositions objectForKey:key];
+		TreeNode *node = [value objectForKey:@"node"];
+		Stroke *s = [node object];
 		double x = [[value objectForKey:@"x"] doubleValue];
 		double y = [[value objectForKey:@"y"] doubleValue];
-		NSString *title = [value objectForKey:@"title"];
-		pdf_add_circle(pdf, NULL, START_X + x, START_Y + y, NODE_RADIUS, .2, PDF_RED, PDF_RED);
-		pdf_add_text(pdf, NULL, [title cString], FONT_SIZE, START_X + x, START_Y + y, PDF_BLACK);
+
+		if (s) {
+			NSLog(@"Drawing stroke %@", [value objectForKey:@"title"]);
+			NSString *evalString = [NSString stringWithFormat:@"%d", [node iValue]];
+			pdf_add_text(pdf, NULL, [evalString cString], FONT_SIZE, START_X + x + shiftX, START_Y + y + shiftY, PDF_RED);
+		}
 	}
 
 	[radialPositions removeAllObjects];

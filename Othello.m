@@ -45,13 +45,6 @@
 
 /* Computer is black */
 
-/*
- *  - (void)freeCoordsArray:(CoordsArray)coordsArray
- *  {
- *   free(coordsArray.coords);
- *  }
- */
-
 - (NSArray <Stroke *> *)listStrokes:(Coord)coord withStroke:(Stroke *)strokeCopy;
 {
 	static Coord allDirections[] = {{-1, 0}, {1, 0}, {0, 1}, {0, -1}};
@@ -121,48 +114,6 @@
 	return [list autorelease];
 }
 
-/*
- *  - (NSArray <Stroke *> *)listStrokes:(PIECE)color
- *  {
- *   Stroke *strokeCopy = [stroke copy];
- *   NSMutableArray *list = [NSMutableArray new];
- *
- *   @autoreleasepool {
- *       for (int y = 0; y < 8; y++) {
- *           for (int x = 0; x < 8; x++) {
- *               if ([strokeCopy board][INDEX(x, y)] == color) {
- *                   Coord c = {x, y};
- *                   NSArray *a = [self listStrokes:c withStroke:strokeCopy];
- *                   [list addObjectsFromArray:a];
- *               }
- *           }
- *       }
- *   }
- *   [strokeCopy release];
- *   return [list autorelease];
- *  }
- */
-/*
- *  - (int)evaluate
- *  {
- *   int sum = 0;
- *
- *   for (int y = 0; y < 8; y++) {
- *       for (int x = 0; x < 8; x++) {
- *           if ([stroke board][INDEX(x, y)] == BLACK) {
- *               sum++;
- *               NSLog(@"B++");
- *           }
- *           else {
- *               sum--;
- *               NSLog(@"W--");
- *           }
- *       }
- *   }
- *
- *   return sum;
- *  }
- */
 - (void)exoticBlackSearch:(int)depth
 {
 	Stack *s = [[Stack alloc]  init];
@@ -188,9 +139,12 @@
 			[Othello logStroke:stk];
 
 			// build tree
-			int eval = [stk evaluate];
+			int turn = (([stk depth] % 2 == 0) ? BLACK : WHITE);
+			NSArray *moves = [self listStrokesForColor:(([stk depth] % 2 == 0) ? BLACK : WHITE) withStroke:stk];
+			int eval = [stk evaluate:[moves count] withTurn:turn];
 			TreeNode *tn = [[[TreeNode alloc] initWithInt:eval] autorelease];
 			[tn setStrValue:[NSString stringWithFormat:@"%d", count++]];
+			[tn setIValue:eval];
 			[tn setObject:stk];
 			[tn setDepth:[stk depth]];
 			[t addChild:[stk parent] withChild:tn];
@@ -203,7 +157,7 @@
 			else {
 				// BLACK or WHITE ? [stk depth odd or not]
 				NSLog(@"Color %d", (([stk depth] % 2 == 0) ? BLACK : WHITE));
-				NSArray *moves = [self listStrokesForColor:(([stk depth] % 2 == 0) ? BLACK : WHITE) withStroke:stk];
+				// NSArray *moves = [self listStrokesForColor:(([stk depth] % 2 == 0) ? BLACK : WHITE) withStroke:stk];
 				NSLog(@"moves %lu", [moves count]);
 
 				for (int i = 0; i < [moves count]; i++) {
@@ -217,18 +171,17 @@
 			}
 		}
 
-		NSLog(@"Best path:");
+		NSMutableString *indentString = [[NSMutableString alloc] initWithString:@""];
+
+		[Tree debugTree:[t root] withIndent:indentString isLast:YES];
+		[[t root] setStrValue:@"ROOT"];
+
+		PdfOut *pdfOut = [PdfOut new];
+
+		[pdfOut drawTree:[t root] fromAngle:0 toAngle:2 * M_PI showStrokes:NO];
+		[pdfOut save:@"minimax.pdf"];
+		[pdfOut release];
 	}
-
-	NSMutableString *indentString = [[NSMutableString alloc] initWithString:@""];
-
-	[Tree debugTree:[t root] withIndent:indentString isLast:YES];
-    [[t root] setStrValue:@"ROOT"];
-
-    PdfOut *pdfOut = [PdfOut new];
-    [pdfOut drawTree:[t root] fromAngle:0 toAngle:2*M_PI];
-    [pdfOut save:@"minimax.pdf"];
-    [pdfOut release];
 
 	[t release];
 	[s release];
