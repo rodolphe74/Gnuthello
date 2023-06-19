@@ -142,6 +142,7 @@
 			int turn = (([stk depth] % 2 == 0) ? BLACK : WHITE);
 			NSArray *moves = [self listStrokesForColor:(([stk depth] % 2 == 0) ? BLACK : WHITE) withStroke:stk];
 			int eval = [stk evaluate:[moves count] withTurn:turn];
+            [stk setEvaluation:eval];
 			TreeNode *tn = [[[TreeNode alloc] initWithInt:eval] autorelease];
 			[tn setStrValue:[NSString stringWithFormat:@"%d", count++]];
 			[tn setIValue:eval];
@@ -176,9 +177,18 @@
 		[Tree debugTree:[t root] withIndent:indentString isLast:YES];
 		[[t root] setStrValue:@"ROOT"];
 
+		NSArray *bestPath = [self findBlackBestPath:t];
+		NSLog(@"Best path:%lu", [bestPath count]);
+        for (int i = 0; i < [bestPath count]; i++) {
+            NSLog(@"Eval:%d", [[bestPath objectAtIndex:i] evaluation]);
+            [Othello logStroke:[bestPath objectAtIndex:i]];
+            NSLog(@"-");
+        }
+        exit(1);
+
 		PdfOut *pdfOut = [PdfOut new];
 
-		[pdfOut drawTree:[t root] fromAngle:0 toAngle:2 * M_PI showStrokes:NO];
+		[pdfOut drawTree:[t root] fromAngle:0 toAngle:2 * M_PI showStrokes:YES];
 		[pdfOut save:@"minimax.pdf"];
 		[pdfOut release];
 	}
@@ -186,6 +196,41 @@
 	[t release];
 	[s release];
 	[rootStroke release];
+}
+
+- (NSArray <Stroke *> *)findBlackBestPath:(Tree *)t
+{
+	TreeNode *currentNode = [t root];
+	NSMutableArray *bestPath = [NSMutableArray new];
+
+	while ([[currentNode children] count] > 0) {
+		int maxEvalBlack = INT_MIN;
+        int maxEvalWhite = INT_MAX;
+		int bestIndex = 0;
+
+		for (int i = 0; i < [[currentNode children] count]; i++) {
+			Stroke *s = [[[currentNode children]objectAtIndex:i] object];
+			int turn = (([s depth] % 2 == 0) ? BLACK : WHITE);
+
+			if (turn == BLACK) {
+				if ([s evaluation] > maxEvalBlack) {
+					maxEvalBlack = [s evaluation];
+					bestIndex = i;
+				}
+			}
+			else {
+				if ([s evaluation] < maxEvalWhite) {
+					maxEvalWhite = [s evaluation];
+					bestIndex = i;
+				}
+			}
+		}
+
+		currentNode = [[currentNode children] objectAtIndex:bestIndex];
+		[bestPath addObject:[currentNode object]];
+	}
+
+	return [bestPath autorelease];
 }
 
 + (void)logStroke:(Stroke *)s

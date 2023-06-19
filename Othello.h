@@ -17,5 +17,6 @@
 // -(NSArray <Stroke *> *)listStrokes: (PIECE)color;
 // - (int)evaluate;
 - (void)exoticBlackSearch:(int)depth;
+- (NSArray <Stroke *> *)findBlackBestPath:(Tree *)t;
 + (void)logStroke:(Stroke *)s;
 @end

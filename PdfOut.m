@@ -38,7 +38,7 @@
 - (void)drawStroke:(Stroke *)stroke atX:(float)atx andY:(float)aty;
 {
 	float x1, y1, x2, y2;
-	float multiplier = .8f;
+	float multiplier = 1.0f;
 
 	for (int i = 0; i <= 8; i++) {
 		x1 = atx;
@@ -196,7 +196,7 @@
 	int shiftX = 0, shiftY = 0;
 
 	if (showStrokes) {
-		shiftX = 42;
+		shiftX = 50;
 		shiftY = 22;
 	}
 
@@ -209,9 +209,9 @@
 		double y = [[value objectForKey:@"y"] doubleValue];
 
 		if (s) {
-			NSLog(@"Drawing stroke %@", [value objectForKey:@"title"]);
+			NSLog(@"Drawing stroke %@ at depth %d", [value objectForKey:@"title"], [s depth]);
 			NSString *evalString = [NSString stringWithFormat:@"%d", [node iValue]];
-			pdf_add_text(pdf, NULL, [evalString cString], FONT_SIZE, START_X + x + shiftX, START_Y + y + shiftY, PDF_RED);
+			pdf_add_text(pdf, NULL, [evalString cString], FONT_SIZE, START_X + x + shiftX, START_Y + y + shiftY, [s depth] % 2 == 0 ? PDF_RED: PDF_BLUE);
 		}
 	}
 

@@ -6,12 +6,12 @@
 static const double RADIUS = 0.0;
 static const double RADIUS_INCREMENT = 320.0;
 static const double NODE_RADIUS = 4.0;
-static const double FONT_SIZE = 16;
+static const double FONT_SIZE = 18;
 //static const double PDF_HEIGHT = 5600;
 //static const double PDF_WIDTH = 4000;
 static const double PDF_HEIGHT_DEPTH_UNITY = (5600 / 7);
 static const double PDF_WIDTH_DEPTH_UNITY = (4000 / 7);
-static const int DEPTH = 9;
+static const int DEPTH = 7;
 
 @interface PdfOut : NSObject
 {

@@ -24,7 +24,7 @@ static int X_SQUARES[] = {1, 1, 2,
 						  1, 7, 1,
 						  6, 7, 1};
 static int NO_MOVE_LEFT_BONUS = 300;
-static int MOBILITY_MUL = 2;
+static int MOBILITY_MUL = 0;
 
 /*
  *  typedef struct _CoordsArray {

@@ -92,9 +92,8 @@ int main()
 		// Minimax && Pdf output tree test
 		Othello *othello = [[Othello new] autorelease];
 		[Othello logStroke:[othello stroke]];
-		[othello exoticBlackSearch:9];
+		[othello exoticBlackSearch:7];
 
-		[pdfOut drawStroke:[othello stroke] atX:0 andY:0];
 		[pdfOut save:@"out.pdf"];
 		[pdfOut release];
 	}
