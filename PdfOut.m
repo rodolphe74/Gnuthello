@@ -134,7 +134,7 @@
 	}
 }
 
-- (void)drawTree:(TreeNode *)root fromAngle:(double)alfa toAngle:(double)beta showStrokes:(bool)showStrokes
+- (void)drawTree:(TreeNode *)root fromAngle:(double)alfa toAngle:(double)beta showStrokes:(bool)showStrokes withBestPath:(NSArray *)bestPath
 {
 	/*
 	 *  const int START_X = PDF_WIDTH / 2;
@@ -142,6 +142,10 @@
 	 */
 	const int START_X = (PDF_WIDTH_DEPTH_UNITY * DEPTH) / 2;
 	const int START_Y = (PDF_HEIGHT_DEPTH_UNITY * DEPTH) / 2;
+
+	int bestPathX = START_X;
+	int bestPathY = START_Y;
+	int bestPathIndex = 0;
 
 	NSMutableDictionary *radialPositions = [NSMutableDictionary new];
 
@@ -172,6 +176,20 @@
 			double yp = [[valuep objectForKey:@"y"] doubleValue];
 			NSLog(@"  -> x=%f y=%f", xp, yp);
 			pdf_add_line(pdf, NULL, START_X + x, START_Y + y, START_X + xp, START_Y + yp, .5, PDF_BLACK);
+		}
+
+		// Best path
+        TreeNode *child = [value objectForKey:@"node"];
+		if (bestPath) {
+			for (int j = 0; j < [bestPath count]; j++) {
+				TreeNode *currentBestPathNode = [bestPath objectAtIndex:j];
+				NSLog(@"@@@@@  %d", bestPathIndex);
+
+				if (child == currentBestPathNode) {
+					pdf_add_circle(pdf, NULL, START_X + x, START_Y + y, 20, 2, PDF_GREEN, PDF_TRANSPARENT);
+					bestPathIndex++;
+				}
+			}
 		}
 	}
 

@@ -142,7 +142,7 @@
 			int turn = (([stk depth] % 2 == 0) ? BLACK : WHITE);
 			NSArray *moves = [self listStrokesForColor:(([stk depth] % 2 == 0) ? BLACK : WHITE) withStroke:stk];
 			int eval = [stk evaluate:[moves count] withTurn:turn];
-            [stk setEvaluation:eval];
+			[stk setEvaluation:eval];
 			TreeNode *tn = [[[TreeNode alloc] initWithInt:eval] autorelease];
 			[tn setStrValue:[NSString stringWithFormat:@"%d", count++]];
 			[tn setIValue:eval];
@@ -179,16 +179,16 @@
 
 		NSArray *bestPath = [self findBlackBestPath:t];
 		NSLog(@"Best path:%lu", [bestPath count]);
-        for (int i = 0; i < [bestPath count]; i++) {
-            NSLog(@"Eval:%d", [[bestPath objectAtIndex:i] evaluation]);
-            [Othello logStroke:[bestPath objectAtIndex:i]];
-            NSLog(@"-");
-        }
-        exit(1);
+
+		for (int i = 0; i < [bestPath count]; i++) {
+			NSLog(@"Eval:%d", [[[bestPath objectAtIndex:i] object] evaluation]);
+			[Othello logStroke:[[bestPath objectAtIndex:i] object]];
+			NSLog(@"-");
+		}
 
 		PdfOut *pdfOut = [PdfOut new];
 
-		[pdfOut drawTree:[t root] fromAngle:0 toAngle:2 * M_PI showStrokes:YES];
+		[pdfOut drawTree:[t root] fromAngle:0 toAngle:2 * M_PI showStrokes:YES withBestPath:bestPath];
 		[pdfOut save:@"minimax.pdf"];
 		[pdfOut release];
 	}
@@ -198,36 +198,37 @@
 	[rootStroke release];
 }
 
-- (NSArray <Stroke *> *)findBlackBestPath:(Tree *)t
+- (NSArray <TreeNode *> *)findBlackBestPath:(Tree *)t
 {
 	TreeNode *currentNode = [t root];
 	NSMutableArray *bestPath = [NSMutableArray new];
 
 	while ([[currentNode children] count] > 0) {
 		int maxEvalBlack = INT_MIN;
-        int maxEvalWhite = INT_MAX;
+		int maxEvalWhite = INT_MAX;
 		int bestIndex = 0;
 
 		for (int i = 0; i < [[currentNode children] count]; i++) {
-			Stroke *s = [[[currentNode children]objectAtIndex:i] object];
-			int turn = (([s depth] % 2 == 0) ? BLACK : WHITE);
+			// Stroke *s = [[[currentNode children]objectAtIndex:i] object];
+			TreeNode *tn = [[currentNode children]objectAtIndex:i];
+			int turn = (([[tn object] depth] % 2 == 0) ? BLACK : WHITE);
 
 			if (turn == BLACK) {
-				if ([s evaluation] > maxEvalBlack) {
-					maxEvalBlack = [s evaluation];
+				if ([[tn object] evaluation] > maxEvalBlack) {
+					maxEvalBlack = [[tn object] evaluation];
 					bestIndex = i;
 				}
 			}
 			else {
-				if ([s evaluation] < maxEvalWhite) {
-					maxEvalWhite = [s evaluation];
+				if ([[tn object] evaluation] < maxEvalWhite) {
+					maxEvalWhite = [[tn object] evaluation];
 					bestIndex = i;
 				}
 			}
 		}
 
 		currentNode = [[currentNode children] objectAtIndex:bestIndex];
-		[bestPath addObject:[currentNode object]];
+		[bestPath addObject:currentNode];
 	}
 
 	return [bestPath autorelease];

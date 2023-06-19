@@ -23,5 +23,5 @@ static const int DEPTH = 7;
 - (void)save:(NSString *)filename;
 - (void)drawStroke:(Stroke *)stroke atX:(float)x andY:(float)y;
 - (void)computeTree:(TreeNode *)root fromAngle:(double)alfa toAngle:(double)beta withCircleRadius:(double)circleRadius withRadialIncrement:(double)radialIncrement withDic:(NSMutableDictionary *)positions;
-- (void)drawTree:(TreeNode *)root fromAngle:(double)alfa toAngle:(double)beta showStrokes:(bool)showStrokes;
+- (void)drawTree:(TreeNode *)root fromAngle:(double)alfa toAngle:(double)beta showStrokes:(bool)showStrokes withBestPath:(NSArray *)bestPath;
 @end
