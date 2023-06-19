@@ -8,7 +8,6 @@ int main()
 {
 	@autoreleasepool {
 		// Stack test
-
 		/*
 		 *  Stack *stack = [[[Stack alloc]  init] autorelease];
 		 *
@@ -27,10 +26,7 @@ int main()
 		 *  NSLog(@"Stack size:%d", [stack count]);
 		 */
 
-		PdfOut *pdfOut = [PdfOut new];
-
 		// Tree test
-
 		/*
 		 *  TreeNode *a = [[[TreeNode alloc] initWithString:@"A"] autorelease];
 		 *  TreeNode *b = [[[TreeNode alloc] initWithString:@"B"] autorelease];
@@ -94,8 +90,6 @@ int main()
 		[Othello logStroke:[othello stroke]];
 		[othello exoticBlackSearch:7];
 
-		[pdfOut save:@"out.pdf"];
-		[pdfOut release];
 	}
 	return 0;
 }

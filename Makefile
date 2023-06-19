@@ -21,10 +21,15 @@ $(OBJECTS): %.o : %.m
 main:$($OBJECTS)
 	$(CC) -o $(MAIN) $(LDFLAGS) $(OBJECTS)
 
+run: clean $(OBJECTS) pdfgen main pack
+	./Minimax
+	pdf2svg ./minimax.pdf minimax.svg
+	
+
 pack: main
 	mkdir -p $(WHERE)
+	mkdir -p $(WHERE)/Resources
 	cp -v $(MAIN) $(WHERE)
-	cp -rv Resources $(WHERE)
 #	cp -v $(PLIST) $(WHERE)/Resources/Info-gnustep.plist
 
 indent:
