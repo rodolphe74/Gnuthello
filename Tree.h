@@ -16,4 +16,5 @@
 + (void)debugNode:(TreeNode *)node;
 + (void)countLeaves:(TreeNode *)node withCounter:(id)leavesCounter;
 + (void)debugTree:(TreeNode *)root withIndent:(NSMutableString *)indentString isLast:(bool)isLast;
++ (void)createList:(TreeNode *)node withArray:(NSMutableArray *)array;
 @end

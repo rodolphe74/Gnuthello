@@ -179,7 +179,8 @@
 		}
 
 		// Best path
-        TreeNode *child = [value objectForKey:@"node"];
+		TreeNode *child = [value objectForKey:@"node"];
+
 		if (bestPath) {
 			for (int j = 0; j < [bestPath count]; j++) {
 				TreeNode *currentBestPathNode = [bestPath objectAtIndex:j];
@@ -228,8 +229,17 @@
 
 		if (s) {
 			NSLog(@"Drawing stroke %@ at depth %d", [value objectForKey:@"title"], [s depth]);
-			NSString *evalString = [NSString stringWithFormat:@"%d", [node iValue]];
-			pdf_add_text(pdf, NULL, [evalString cString], FONT_SIZE, START_X + x + shiftX, START_Y + y + shiftY, [s depth] % 2 == 0 ? PDF_RED: PDF_BLUE);
+			// NSString *evalString = [NSString stringWithFormat:@"%d", [node iValue]];
+			NSString *evalString;
+
+			if ([[node children] count] == 0) {
+				evalString = [NSString stringWithFormat:@"%d [%d]", [s evaluation], [s bestEvaluation]];
+			}
+			else {
+				evalString = [NSString stringWithFormat:@"[%d]", [s bestEvaluation]];
+			}
+
+			pdf_add_text(pdf, NULL, [evalString cString], FONT_SIZE, START_X + x + shiftX, START_Y + y + shiftY, [s depth] % 2 == 0 ? PDF_BLACK: PDF_RGB(128, 128, 128));
 		}
 	}
 

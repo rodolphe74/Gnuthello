@@ -184,4 +184,12 @@
 	[reIndentString release];
 }
 
++ (void)createList:(TreeNode *)node withArray:(NSMutableArray *)array
+{
+	NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
+		[NSNumber  numberWithInt:[[node object] depth]], @"depth", node, @"node", nil];
+
+	[array addObject:dict];
+}
+
 @end

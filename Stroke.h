@@ -24,7 +24,7 @@ static int X_SQUARES[] = {1, 1, 2,
 						  1, 7, 1,
 						  6, 7, 1};
 static int NO_MOVE_LEFT_BONUS = 300;
-static int MOBILITY_MUL = 0;
+static float MOBILITY_MUL = 0.5f;
 
 /*
  *  typedef struct _CoordsArray {
@@ -37,6 +37,7 @@ static int MOBILITY_MUL = 0;
 {
 	PIECE *board;
 	int evaluation;
+	int bestEvaluation;
 	Coord from, to;
 	int depth;
 	TreeNode *parent;
@@ -44,6 +45,7 @@ static int MOBILITY_MUL = 0;
 @property (nonatomic, readwrite, assign) PIECE *board;
 @property (nonatomic, readwrite, assign) Coord from, to;
 @property (nonatomic, readwrite, assign) int evaluation;
+@property (nonatomic, readwrite, assign) int bestEvaluation;
 @property (nonatomic, readwrite, assign) int depth;
 @property (nonatomic, readwrite, assign) TreeNode *parent;
 - (int)evaluate:(int)movesCount withTurn:(int)blackOrWhite;

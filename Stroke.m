@@ -5,6 +5,7 @@
 @implementation Stroke
 @synthesize board;
 @synthesize evaluation;
+@synthesize bestEvaluation;
 @synthesize from, to;
 @synthesize depth;
 @synthesize parent;
@@ -38,7 +39,7 @@
 
 - (int)evaluate:(int)movesCount withTurn:(int)blackOrWhite
 {
-	int sum = 0;
+	float sum = 0;
 
 	/*
 	 * Black player evaluation
@@ -97,7 +98,7 @@
 		}
 	}
 
-	return sum;
+	return (int) roundf(sum);
 }
 
 @end

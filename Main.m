@@ -8,6 +8,7 @@ int main()
 {
 	@autoreleasepool {
 		// Stack test
+
 		/*
 		 *  Stack *stack = [[[Stack alloc]  init] autorelease];
 		 *
@@ -27,6 +28,7 @@ int main()
 		 */
 
 		// Tree test
+
 		/*
 		 *  TreeNode *a = [[[TreeNode alloc] initWithString:@"A"] autorelease];
 		 *  TreeNode *b = [[[TreeNode alloc] initWithString:@"B"] autorelease];
@@ -89,7 +91,6 @@ int main()
 		Othello *othello = [[Othello new] autorelease];
 		[Othello logStroke:[othello stroke]];
 		[othello exoticBlackSearch:7];
-
 	}
 	return 0;
 }
