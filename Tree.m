@@ -14,7 +14,7 @@
 
 - (void)dealloc
 {
-	NSLog(@"deallocating Tree at %p", self);
+	//NSLog(@"deallocating Tree at %p", self);
 	[super dealloc];
 }
 
@@ -32,7 +32,7 @@
 
 	while ([s count] > 0) {
 		TreeNode *t = [s pop];
-		// NSLog(@"Traversing TreeNode %@", [t strValue]);
+		// //NSLog(@"Traversing TreeNode %@", [t strValue]);
 
 		for (int i = [[t children] count] - 1; i >= 0; i--) {
 			TreeNode *c = [[t children] objectAtIndex:i];
@@ -60,7 +60,7 @@
 
 	while ([s count] > 0) {
 		TreeNode *t = [s pop];
-		// NSLog(@"Traversing TreeNode %@", [t strValue]);
+		// //NSLog(@"Traversing TreeNode %@", [t strValue]);
 		[klass performSelector:sel withObject:t withObject:object];
 
 		for (int i = [[t children] count] - 1; i >= 0; i--) {
@@ -101,7 +101,7 @@
 		}
 
 		NSDictionary *temp = [s pop];
-		// NSLog(@"*>%@", [[temp objectForKey:@"node"] strValue]);
+		// //NSLog(@"*>%@", [[temp objectForKey:@"node"] strValue]);
 		TreeNode *t = [temp objectForKey:@"node"];
 		[klass performSelector:sel withObject:t withObject:object];
 
@@ -112,10 +112,10 @@
 		}
 
 		if ([s count] > 0) {
-			// NSLog(@"ICI:%d", [s count]);
+			// //NSLog(@"ICI:%d", [s count]);
 			int index = [[temp objectForKey:@"index"] intValue] + 1;
 			r = [[[[s peek] objectForKey:@"node"] children] objectAtIndex:index];
-			// NSLog(@"ICI2:%p %@", r, [r strValue]);
+			// //NSLog(@"ICI2:%p %@", r, [r strValue]);
 			currentRootIndex = index;
 		}
 	}
@@ -159,7 +159,7 @@
 	if ([[node children] count] == 0) {
 		NSNumber *n = [leavesCounter objectForKey:@"value"];
 		int currentValue = [n intValue];
-		// NSLog(@"currentValue:%d at %@", currentValue, [node strValue]);
+		// //NSLog(@"currentValue:%d at %@", currentValue, [node strValue]);
 		currentValue++;
 		[leavesCounter setValue:[NSNumber numberWithInt:currentValue] forKey:@"value"];
 	}

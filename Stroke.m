@@ -12,7 +12,7 @@
 - (id)init
 {
 	if (self = [super init]) {
-		NSLog(@"Stroke init at %p", self);
+		//NSLog(@"Stroke init at %p", self);
 		board = (PIECE *)malloc(sizeof(PIECE) * 8 * 8);
 	}
 	return self;
@@ -20,14 +20,14 @@
 
 - (void)dealloc
 {
-	NSLog(@"Stroke dealloc at %p", self);
+	//NSLog(@"Stroke dealloc at %p", self);
 	free(board);
 	[super dealloc];
 }
 
 - (id)copyWithZone:(NSZone *)zone
 {
-	NSLog(@"allocWithZone");
+	//NSLog(@"allocWithZone");
 	Stroke *strokeCopy = [[Stroke allocWithZone:zone] init];
 
 	memcpy([strokeCopy board], [self board], sizeof(PIECE) * 8 * 8);
@@ -76,7 +76,7 @@
 
 				// check x & c
 				for (int i = 0; i < sizeof(X_SQUARES) / sizeof(int); i += 3) {
-					NSLog(@"@@@%d)%d", i, X_SQUARES[i]);
+					//NSLog(@"@@@%d)%d", i, X_SQUARES[i]);
 
 					if (x == X_SQUARES[i] && y == X_SQUARES[i + 1]) {
 						sum -= X_SQUARES[i + 2];
@@ -88,7 +88,7 @@
 
 				// check x & c
 				for (int i = 0; i < sizeof(X_SQUARES) / sizeof(int); i += 3) {
-					NSLog(@"@@@%d)%d", i, X_SQUARES[i]);
+					//NSLog(@"@@@%d)%d", i, X_SQUARES[i]);
 
 					if (x == X_SQUARES[i] && y == X_SQUARES[i + 1]) {
 						sum += X_SQUARES[i + 2];
@@ -98,7 +98,7 @@
 		}
 	}
 
-	return (int) roundf(sum);
+	return (int)roundf(sum);
 }
 
 @end

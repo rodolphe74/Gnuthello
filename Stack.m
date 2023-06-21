@@ -11,7 +11,7 @@
 }
 
 - (void)dealloc {
-	NSLog(@"Stack dealloc");
+	//NSLog(@"Stack dealloc");
 	[m_array release];
 	[super dealloc];
 }

@@ -25,7 +25,7 @@
 
 - (void)dealloc
 {
-	NSLog(@"deallocating PdfOut at %p", self);
+	//NSLog(@"deallocating PdfOut at %p", self);
 	pdf_destroy(pdf);
 	[super dealloc];
 }
@@ -78,11 +78,11 @@
 	 *  for the drawing’s concentric circles. The initial values for α and β for the
 	 *  root’s annulus wedge are 0° and 360°, respectively */
 
-	NSLog(@"DEPTH %d", [root depth]);
+	//NSLog(@"DEPTH %d", [root depth]);
 
 	if ([root depth] == 1) {
 		// root
-		NSLog(@"root");
+		//NSLog(@"root");
 		NSMutableDictionary *radialPosition = [NSMutableDictionary new];
 		[radialPosition setObject:[NSNumber numberWithDouble:0] forKey:@"x"];
 		[radialPosition setObject:[NSNumber numberWithDouble:0] forKey:@"y"];
@@ -115,7 +115,7 @@
 		double x = (circleRadius * cos((theta + mi) / 2.0));
 		double y = (circleRadius * sin((theta + mi) / 2.0));
 
-		NSLog(@"leavesNumber=%d  lambda=%d  child.X=%f  child.Y=%f  radius=%f  parent=%@  current=%@", leavesNumber, lambda, x, y, circleRadius, [root strValue], [child strValue]);
+		//NSLog(@"leavesNumber=%d  lambda=%d  child.X=%f  child.Y=%f  radius=%f  parent=%@  current=%@", leavesNumber, lambda, x, y, circleRadius, [root strValue], [child strValue]);
 		NSMutableDictionary *radialPosition = [NSMutableDictionary new];
 		[radialPosition setObject:[NSNumber numberWithDouble:x] forKey:@"x"];
 		[radialPosition setObject:[NSNumber numberWithDouble:y] forKey:@"y"];
@@ -134,18 +134,10 @@
 	}
 }
 
-- (void)drawTree:(TreeNode *)root fromAngle:(double)alfa toAngle:(double)beta showStrokes:(bool)showStrokes withBestPath:(NSArray *)bestPath
+- (void)drawTree:(TreeNode *)root fromAngle:(double)alfa toAngle:(double)beta showStrokes:(bool)showStrokes
 {
-	/*
-	 *  const int START_X = PDF_WIDTH / 2;
-	 *  const int START_Y = PDF_HEIGHT / 2;
-	 */
 	const int START_X = (PDF_WIDTH_DEPTH_UNITY * DEPTH) / 2;
 	const int START_Y = (PDF_HEIGHT_DEPTH_UNITY * DEPTH) / 2;
-
-	int bestPathX = START_X;
-	int bestPathY = START_Y;
-	int bestPathIndex = 0;
 
 	NSMutableDictionary *radialPositions = [NSMutableDictionary new];
 
@@ -174,24 +166,27 @@
 			NSDictionary *valuep = [radialPositions objectForKey:objectKey];
 			double xp = [[valuep objectForKey:@"x"] doubleValue];
 			double yp = [[valuep objectForKey:@"y"] doubleValue];
-			NSLog(@"  -> x=%f y=%f", xp, yp);
+			//NSLog(@"  -> x=%f y=%f", xp, yp);
 			pdf_add_line(pdf, NULL, START_X + x, START_Y + y, START_X + xp, START_Y + yp, .5, PDF_BLACK);
 		}
 
 		// Best path
-		TreeNode *child = [value objectForKey:@"node"];
 
-		if (bestPath) {
-			for (int j = 0; j < [bestPath count]; j++) {
-				TreeNode *currentBestPathNode = [bestPath objectAtIndex:j];
-				NSLog(@"@@@@@  %d", bestPathIndex);
-
-				if (child == currentBestPathNode) {
-					pdf_add_circle(pdf, NULL, START_X + x, START_Y + y, 20, 2, PDF_GREEN, PDF_TRANSPARENT);
-					bestPathIndex++;
-				}
-			}
-		}
+		/*
+		 *  TreeNode *child = [value objectForKey:@"node"];
+		 *
+		 *  if (bestPath) {
+		 *   for (int j = 0; j < [bestPath count]; j++) {
+		 *       TreeNode *currentBestPathNode = [bestPath objectAtIndex:j];
+		 *       //NSLog(@"@@@@@  %d", bestPathIndex);
+		 *
+		 *       if (child == currentBestPathNode) {
+		 *           pdf_add_circle(pdf, NULL, START_X + x, START_Y + y, 20, 2, PDF_GREEN, PDF_TRANSPARENT);
+		 *           bestPathIndex++;
+		 *       }
+		 *   }
+		 *  }
+		 */
 	}
 
 	// Stroke
@@ -204,7 +199,7 @@
 		double y = [[value objectForKey:@"y"] doubleValue];
 
 		if (s) {
-			NSLog(@"Drawing stroke %@", [value objectForKey:@"title"]);
+			//NSLog(@"Drawing stroke %@", [value objectForKey:@"title"]);
 			[self drawStroke:s atX:START_X + x andY:START_Y + y - 12];
 			//NSString *evalString = [NSString stringWithFormat:@"%d", [node iValue]];
 			//pdf_add_text(pdf, NULL, [evalString cString], FONT_SIZE, START_X + x + 42, START_Y + y + 22, PDF_RED);
@@ -228,7 +223,7 @@
 		double y = [[value objectForKey:@"y"] doubleValue];
 
 		if (s) {
-			NSLog(@"Drawing stroke %@ at depth %d", [value objectForKey:@"title"], [s depth]);
+			//NSLog(@"Drawing stroke %@ at depth %d", [value objectForKey:@"title"], [s depth]);
 			// NSString *evalString = [NSString stringWithFormat:@"%d", [node iValue]];
 			NSString *evalString;
 
@@ -242,6 +237,27 @@
 			pdf_add_text(pdf, NULL, [evalString cString], FONT_SIZE, START_X + x + shiftX, START_Y + y + shiftY, [s depth] % 2 == 0 ? PDF_BLACK: PDF_RGB(128, 128, 128));
 		}
 	}
+
+	// Best stroke
+	int bestBlackStrokeEval = INT_MIN;
+	double bx, by;
+
+	for (int i = 0; i < [keys count]; i++) {
+		id key = [keys objectAtIndex:i];
+		NSDictionary *value = [radialPositions objectForKey:key];
+		TreeNode *node = [value objectForKey:@"node"];
+		Stroke *s = [node object];
+		double x = [[value objectForKey:@"x"] doubleValue];
+		double y = [[value objectForKey:@"y"] doubleValue];
+
+		if ([s depth] == 2 && [s bestEvaluation] > bestBlackStrokeEval) {
+			bestBlackStrokeEval = [s bestEvaluation];
+			bx = x;
+			by = y;
+		}
+	}
+
+	pdf_add_circle(pdf, NULL, START_X + bx, START_Y + by, 20, 2, PDF_GREEN, PDF_TRANSPARENT);
 
 	[radialPositions removeAllObjects];
 	[radialPositions release];

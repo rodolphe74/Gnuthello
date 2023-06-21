@@ -10,7 +10,7 @@
 - (id)init
 {
 	if (self = [super init]) { // equivalent to "self does not equal nil"
-		NSLog(@"init TreeNode at %p", self);
+		//NSLog(@"init TreeNode at %p", self);
 
 		children = [NSMutableArray new];
 		iValue = 0;
@@ -43,7 +43,7 @@
 
 - (void)dealloc
 {
-	NSLog(@"deallocating TreeNode at %p", self);
+	//NSLog(@"deallocating TreeNode at %p", self);
 	[strValue release];
 	[children removeAllObjects];
 	[children release];
@@ -52,7 +52,7 @@
 
 - (id)copyWithZone:(NSZone *)zone
 {
-	NSLog(@"allocWithZone");
+	//NSLog(@"allocWithZone");
 	TreeNode *copy = [[TreeNode allocWithZone:zone] init];
 
 	[copy setIValue:iValue];

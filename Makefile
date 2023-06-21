@@ -1,7 +1,8 @@
 CC=/usr/bin/clang
 CXX=/usr/bin/clang++
 
-SOURCES = $(wildcard *.m)
+# SOURCES = $(wildcard *.m)
+SOURCES = Main.m MyObject.m Othello.m PdfOut.m Stack.m Stroke.m Tree.m TreeNode.m
 OBJECTS = $(SOURCES:.m=.o)
 MAIN = Minimax
 WHERE = Minimax.app
@@ -35,6 +36,13 @@ pack: main
 indent:
 	uncrustify -c uncobjc.cfg --replace *.m || true
 	uncrustify -c uncobjc.cfg --replace *.h || true
+	rm *~
+
+notrace:
+	sed -i 's/NSLog/\/\/NSLog/g' *.m *.h
+
+traces:
+	sed -i 's/\/\/NSLog/NSLog/g' *.m *.h
 
 
 pdfgen:
@@ -42,6 +50,12 @@ pdfgen:
 
 pdftest: pdfgen
 	$(CC) -o pdftest pdftest.c pdfgen.o
+
+stacktest:
+	$(CC) $(CFLAGS) -o StackTest $(LDFLAGS) StackTest.m
+	
+treetest:$(OBJECTS)
+	$(CC) $(CFLAGS) -o TreeTest $(LDFLAGS) TreeTest.m TreeNode.o Stack.o
 
 .PHONY: clean
 clean:

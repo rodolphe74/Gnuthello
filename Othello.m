@@ -9,7 +9,7 @@
 
 - (id)init
 {
-	NSLog(@"Othello init");
+	//NSLog(@"Othello init");
 
 	if (self = [super init]) {
 		stack = [Stack new];
@@ -37,7 +37,7 @@
 
 - (void)dealloc
 {
-	NSLog(@"Othello dealloc");
+	//NSLog(@"Othello dealloc");
 	[stack release];
 	[stroke release];
 	[super dealloc];
@@ -85,7 +85,7 @@
 		}
 
 		if (saveIt) {
-			// NSLog(@"save dir %d,%d", allDirections[d].x, allDirections[d].y);
+			// //NSLog(@"save dir %d,%d", allDirections[d].x, allDirections[d].y);
 			[copyOfTheOriginalStroke board][INDEX(t.x, t.y)] = color;
 			// [Othello logStroke:copyOfTheOriginalStroke];
 			[list addObject:copyOfTheOriginalStroke]; // rc=2
@@ -135,7 +135,7 @@
 		// purge autoreleased moves lists at every search
 		while ([s count] > 0) {
 			Stroke *stk = [s pop];
-			NSLog(@"popped depth:%d", [stk depth]);
+			//NSLog(@"popped depth:%d", [stk depth]);
 			[Othello logStroke:stk];
 
 			// build tree
@@ -153,20 +153,20 @@
 
 			if ([stk depth] == depth) {
 				// stop pushing
-				NSLog(@"Depth:%d  eval:%d  stack:%d", depth, eval, [s count]);
+				//NSLog(@"Depth:%d  eval:%d  stack:%d", depth, eval, [s count]);
 			}
 			else {
 				// BLACK or WHITE ? [stk depth odd or not]
-				NSLog(@"Color %d", /*(([stk depth] % 2 == 0) ? BLACK : WHITE)*/ turn);
+				//NSLog(@"Color %d", /*(([stk depth] % 2 == 0) ? BLACK : WHITE)*/ turn);
 				// NSArray *moves = [self listStrokesForColor:(([stk depth] % 2 == 0) ? BLACK : WHITE) withStroke:stk];
-				NSLog(@"moves %lu", [moves count]);
+				//NSLog(@"moves %lu", [moves count]);
 
 				for (int i = 0; i < [moves count]; i++) {
 					Stroke *currentStk = [moves objectAtIndex:i];
 					[currentStk setDepth:[stk depth] + 1];
 					[currentStk setParent:[stk parent]];
 					// save previous (stk) in currentStk
-					NSLog(@"inserting previous stroke at %d", [stk depth] - 1);
+					//NSLog(@"inserting previous stroke at %d", [stk depth] - 1);
 					[s push:currentStk];
 				}
 			}
@@ -177,12 +177,11 @@
 		[Tree debugTree:[t root] withIndent:indentString isLast:YES];
 		[[t root] setStrValue:@"ROOT"];
 
-		NSArray *bestPath = [self findBlackBestPath:t];
-		NSLog(@"Best path:%lu", [bestPath count]);
+		[self windupScores:t];
 
 		PdfOut *pdfOut = [PdfOut new];
 
-		[pdfOut drawTree:[t root] fromAngle:0 toAngle:2 * M_PI showStrokes:YES withBestPath:bestPath];
+		[pdfOut drawTree:[t root] fromAngle:0 toAngle:2 * M_PI showStrokes:YES];
 		[pdfOut save:@"minimax.pdf"];
 		[pdfOut release];
 	}
@@ -192,22 +191,17 @@
 	[rootStroke release];
 }
 
-- (NSArray <TreeNode *> *)findBlackBestPath:(Tree *)t
+- (void)windupScores:(Tree *)t
 {
-	TreeNode *currentNode = [t root];
-	NSMutableArray *bestPath = [NSMutableArray new];
-
 	NSMutableArray *nodesList = [NSMutableArray new];
 
 	[Tree preOrderTraversal:[t root] withSelector:@"createList:withArray:" andObject:nodesList];
-	NSLog(@"@@@@Nodes list size:%lu", [nodesList count]);
+	//NSLog(@"@@@@Nodes list size:%lu", [nodesList count]);
 
 	NSSortDescriptor *depthDescriptor = [[NSSortDescriptor alloc] initWithKey:@"depth" ascending:NO];
 
 	NSArray *descriptors = [NSArray arrayWithObjects:depthDescriptor, nil]; // autorelease
 	NSArray *sortedNodesList = [nodesList sortedArrayUsingDescriptors:descriptors];
-
-	const int DEPTH = 7; //TODO
 
 	for (int i = 0; i < [sortedNodesList count]; i++) {
 		TreeNode *tn = [[sortedNodesList objectAtIndex:i] objectForKey:@"node"];
@@ -215,12 +209,12 @@
 		int turn = (([s depth] % 2 == 1) ? BLACK : WHITE);
 
 		if ([[tn children] count] == 0) {
-			NSLog(@"####%d", [s depth]);
+			//NSLog(@"####%d", [s depth]);
 			int evaluation = [[tn object] evaluation];
 			[[tn object] setBestEvaluation:evaluation];
 		}
 		else {
-			NSLog(@"####%d", [s depth]);
+			//NSLog(@"####%d", [s depth]);
 			int be = (turn == BLACK ? INT_MIN : INT_MAX);
 
 			for (int j = 0; j < [[tn children] count]; j++) {
@@ -232,39 +226,12 @@
 			}
 
 			[[tn object] setBestEvaluation:be];
-			NSLog(@"####be=%d on %p", [[tn object] bestEvaluation], tn);
+			//NSLog(@"####be=%d on %p", [[tn object] bestEvaluation], tn);
 		}
 	}
 
 	[nodesList release];
 	[depthDescriptor release];
-
-	/*
-	 *  while ([[currentNode children] count] > 0) {
-	 *   int maxEvalBlack = INT_MIN;
-	 *   int maxEvalWhite = INT_MAX;
-	 *   int bestIndex = 0;
-	 *
-	 *   for (int i = 0; i < [[currentNode children] count]; i++) {
-	 *       // Stroke *s = [[[currentNode children]objectAtIndex:i] object];
-	 *       TreeNode *tn = [[currentNode children]objectAtIndex:i];
-	 *
-	 *       int turn = (([[tn object] depth] % 2 == 0) ? BLACK : WHITE);
-	 *       NSLog(@"@@@@Turn:%d %d", [[tn object] depth], turn);
-	 *
-	 *       if ([[tn object] evaluation] > maxEvalBlack) {
-	 *           maxEvalBlack = [[tn object] evaluation];
-	 *           bestIndex = i;
-	 *       }
-	 *
-	 *   }
-	 *
-	 *   currentNode = [[currentNode children] objectAtIndex:bestIndex];
-	 *   [bestPath addObject:currentNode];
-	 *  }
-	 */
-
-	return [bestPath autorelease];
 }
 
 + (void)logStroke:(Stroke *)s
@@ -284,7 +251,7 @@
 			}
 		}
 
-		NSLog(@"%@", line);
+		//NSLog(@"%@", line);
 		[line release];
 	}
 }
