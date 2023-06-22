@@ -11,14 +11,16 @@ static const double FONT_SIZE = 18;
 //static const double PDF_WIDTH = 4000;
 static const double PDF_HEIGHT_DEPTH_UNITY = (5600 / 7);
 static const double PDF_WIDTH_DEPTH_UNITY = (4000 / 7);
-static const int DEPTH = 7;
+// static const int DEPTH = 7;
 
 @interface PdfOut : NSObject
 {
 	struct pdf_doc *pdf;
+	int depth;
 }
 @property (nonatomic, readwrite, assign) struct pdf_doc *pdf;
-- (id)init;
+@property (nonatomic, readwrite, assign) int depth;
+- (id)initWithDepth:(int)d;
 - (void)dealloc;
 - (void)save:(NSString *)filename;
 - (void)drawStroke:(Stroke *)stroke atX:(float)x andY:(float)y;

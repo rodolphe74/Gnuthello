@@ -35,6 +35,19 @@
 	return self;
 }
 
+- (id)initWithBoard:(PIECE *)board
+{
+	if (self = [super init]) {
+		stack = [Stack new];
+		stroke = [Stroke new];
+
+		for (int i = 0; i < 8 * 8; i++) {
+			[stroke board][i] = board[i];
+		}
+	}
+	return self;
+}
+
 - (void)dealloc
 {
 	//NSLog(@"Othello dealloc");
@@ -179,7 +192,7 @@
 
 		[self windupScores:t];
 
-		PdfOut *pdfOut = [PdfOut new];
+		PdfOut *pdfOut = [[PdfOut alloc] initWithDepth:depth];
 
 		[pdfOut drawTree:[t root] fromAngle:0 toAngle:2 * M_PI showStrokes:YES];
 		[pdfOut save:@"minimax.pdf"];

@@ -26,13 +26,6 @@ static int X_SQUARES[] = {1, 1, 2,
 static int NO_MOVE_LEFT_BONUS = 300;
 static float MOBILITY_MUL = 0.5f;
 
-/*
- *  typedef struct _CoordsArray {
- *   Coord * coords;
- *   int		size;
- *  } CoordsArray;
- */
-
 @interface Stroke : NSObject <NSCopying>
 {
 	PIECE *board;

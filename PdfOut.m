@@ -2,7 +2,8 @@
 
 @implementation PdfOut
 @synthesize pdf;
-- (id)init
+@synthesize depth;
+- (id)initWithDepth:(int)d
 {
 	if (self = [super init]) {
 		struct pdf_info info = {
@@ -14,11 +15,10 @@
 			.date		= "Today"
 		};
 
-		// pdf = pdf_create(PDF_A4_WIDTH, PDF_A4_HEIGHT, &info);
-		// pdf = pdf_create(PDF_WIDTH, PDF_HEIGHT, &info);
-		pdf = pdf_create(PDF_WIDTH_DEPTH_UNITY * DEPTH, PDF_HEIGHT_DEPTH_UNITY * DEPTH, &info);
+		pdf = pdf_create(PDF_WIDTH_DEPTH_UNITY * d, PDF_HEIGHT_DEPTH_UNITY * d, &info);
 		pdf_set_font(pdf, "Times-Roman");
 		pdf_append_page(pdf);
+		depth = d;
 	}
 	return self;
 }
@@ -136,8 +136,8 @@
 
 - (void)drawTree:(TreeNode *)root fromAngle:(double)alfa toAngle:(double)beta showStrokes:(bool)showStrokes
 {
-	const int START_X = (PDF_WIDTH_DEPTH_UNITY * DEPTH) / 2;
-	const int START_Y = (PDF_HEIGHT_DEPTH_UNITY * DEPTH) / 2;
+	const int START_X = (PDF_WIDTH_DEPTH_UNITY * depth) / 2;
+	const int START_Y = (PDF_HEIGHT_DEPTH_UNITY * depth) / 2;
 
 	NSMutableDictionary *radialPositions = [NSMutableDictionary new];
 
