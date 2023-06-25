@@ -94,7 +94,7 @@
 			else {
 				if (saveIt) {
 					exploreFromHere = YES;
-					NSLog(@"break in %d,%d with direction %d,%d - Save:%d", t.x, t.y, allDirections[d].x, allDirections[d].y, saveIt);
+					// NSLog(@"break in %d,%d with direction %d,%d - Save:%d", t.x, t.y, allDirections[d].x, allDirections[d].y, saveIt);
 				}
 				// empty
 				break;
@@ -104,21 +104,25 @@
 		if (saveIt) {
 			
 			// //NSLog(@"save dir %d,%d", allDirections[d].x, allDirections[d].y);
-			[copyOfTheOriginalStroke board][INDEX(t.x, t.y)] = color;
-
+           	[copyOfTheOriginalStroke board][INDEX(t.x, t.y)] = color;
+            
             // before keeping stroke, explore all directions from new piece to the same color
 			// until the same color covering opposite color
 			if (exploreFromHere) {
-				Coord c = {t.x, t.y};
-                NSLog(@"====>");
-                [Othello logStroke:copyOfTheOriginalStroke];
+                //NSLog(@"====>");
+                Coord c = {t.x, t.y};
+                // [Othello logStroke:copyOfTheOriginalStroke];
 				Stroke *explored = [self exploreFromHere:c withStroke:copyOfTheOriginalStroke withTurnColor:color];
+                [explored setFrom:coord];
+                [explored setTo:c];
+                [list addObject:explored]; // autoreleased && rc++
+
 				// [Othello logStroke:explored];
-                NSLog(@"");
+                //NSLog(@"");
 			}
 
 			// [Othello logStroke:copyOfTheOriginalStroke];
-			[list addObject:copyOfTheOriginalStroke]; // rc=2
+			// [list addObject:copyOfTheOriginalStroke]; // rc=2
 		}
 		[copyOfTheOriginalStroke release];
 	}
@@ -131,7 +135,7 @@
 	Coord t;
 	PIECE oppositeColor = (color == WHITE) ? BLACK : WHITE;
 	Stroke *copyOfTheOriginalStroke = [strokeCopy copy];
-    NSLog(@"exploreFromHere:%d,%d", here.x, here.y);
+    // NSLog(@"exploreFromHere:%d,%d", here.x, here.y);
 
 	for (int d = 0; d < 8; d++) {
 		t = here;
@@ -165,7 +169,7 @@
 		}
 
 		if (saveIt) {
-            [Othello logStroke:currentStroke];
+            // [Othello logStroke:currentStroke];
 			[copyOfTheOriginalStroke release];
 			copyOfTheOriginalStroke = [currentStroke copy];
 		}
@@ -315,6 +319,7 @@
 
 + (void)logStroke:(Stroke *)s
 {
+    NSLog(@"[%d,%d] -> [%d,%d]", [s from].x, [s from].y, [s to].x, [s to].y);
 	for (int y = 0; y < 8; y++) {
 		NSMutableString *line = [[NSMutableString alloc] initWithString:@""];
 

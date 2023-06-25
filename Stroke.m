@@ -12,7 +12,7 @@
 - (id)init
 {
 	if (self = [super init]) {
-		//NSLog(@"Stroke init at %p", self);
+		// NSLog(@"Stroke init at %p", self);
 		board = (PIECE *)malloc(sizeof(PIECE) * 8 * 8);
 	}
 	return self;
@@ -20,7 +20,7 @@
 
 - (void)dealloc
 {
-	//NSLog(@"Stroke dealloc at %p", self);
+	// NSLog(@"Stroke dealloc at %p", self);
 	free(board);
 	[super dealloc];
 }
