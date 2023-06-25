@@ -25,6 +25,23 @@
 	[super dealloc];
 }
 
+- (NSUInteger)hash
+{
+	if (self == nil) return 0;
+
+    NSUInteger result = 1;
+    for (int i = 0; i < 8*8; i++) {
+        result = 31 * result + board[i];
+    }
+    // NSLog(@"Hash:%lu", result);
+    return result;
+}
+
+- (BOOL)isEqual:(id)object
+{
+	return [self hash] == [object hash];
+}
+
 - (id)copyWithZone:(NSZone *)zone
 {
 	//NSLog(@"allocWithZone");

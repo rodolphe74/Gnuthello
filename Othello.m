@@ -58,7 +58,7 @@
 
 /* Computer is black */
 
-- (NSArray <Stroke *> *)listStrokes:(Coord)coord withStroke:(Stroke *)strokeCopy;
+- (NSArray <Stroke *> *)listStrokes:(Coord)coord withStroke:(Stroke *)strokeCopy andStrokesSet:(NSMutableSet *)similarStrokes;
 {
 	Coord t;
 	NSMutableArray *list = [[NSMutableArray new] autorelease];
@@ -113,9 +113,12 @@
                 Coord c = {t.x, t.y};
                 // [Othello logStroke:copyOfTheOriginalStroke];
 				Stroke *explored = [self exploreFromHere:c withStroke:copyOfTheOriginalStroke withTurnColor:color];
-                [explored setFrom:coord];
+                                [explored setFrom:coord];
                 [explored setTo:c];
-                [list addObject:explored]; // autoreleased && rc++
+                if ([similarStrokes containsObject:explored] == NO)
+                    [list addObject:explored]; // autoreleased && rc++
+                [similarStrokes addObject:explored];
+                NSLog(@"similar:%lu", [similarStrokes count]);
 
 				// [Othello logStroke:explored];
                 //NSLog(@"");
@@ -182,18 +185,19 @@
 - (NSArray <Stroke *> *)listStrokesForColor:(PIECE)color withStroke:(Stroke *)strokeCopy
 {
 	NSMutableArray *list = [NSMutableArray new];
-
+	NSMutableSet *set = [NSMutableSet new];
 	@autoreleasepool {
 		for (int y = 0; y < 8; y++) {
 			for (int x = 0; x < 8; x++) {
 				if ([strokeCopy board][INDEX(x, y)] == color) {
 					Coord c = {x, y};
-					NSArray *a = [self listStrokes:c withStroke:strokeCopy];
+					NSArray *a = [self listStrokes:c withStroke:strokeCopy andStrokesSet:set];
 					[list addObjectsFromArray:a];
 				}
 			}
 		}
 	}
+	[set release];
 	return [list autorelease];
 }
 

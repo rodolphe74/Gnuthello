@@ -11,7 +11,7 @@ static Coord allDirections[] = {{-1, 0}, {1, 0}, {0, 1}, {0, -1}, {-1, -1}, {-1,
 }
 @property (nonatomic, readonly) Stroke *stroke;
 - (id)initWithBoard:(PIECE *)board;
-- (NSArray <Stroke *> *)listStrokes:(Coord)coord withStroke:(Stroke *)strokeCopy;
+- (NSArray <Stroke *> *)listStrokes:(Coord)coord withStroke:(Stroke *)strokeCopy andStrokesSet:(NSMutableSet *)similarStrokes;
 - (NSArray <Stroke *> *)listStrokesForColor:(PIECE)color withStroke:(Stroke *)strokeCopy;
 - (Stroke *)exploreFromHere:(Coord)here withStroke:(Stroke *)strokeCopy withTurnColor:(PIECE)color;
 - (void)exoticBlackSearch:(int)depth;
