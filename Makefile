@@ -53,6 +53,9 @@ pdftest: pdfgen
 
 stacktest:
 	$(CC) $(CFLAGS) -o StackTest $(LDFLAGS) StackTest.m
+
+strokestest:
+	$(CC) $(CFLAGS) -o StrokesTest $(LDFLAGS) StrokesTest.m Othello.o PdfOut.o Stack.o Stroke.o Tree.o TreeNode.o
 	
 treetest:$(OBJECTS)
 	$(CC) $(CFLAGS) -o TreeTest $(LDFLAGS) TreeTest.m TreeNode.o Stack.o

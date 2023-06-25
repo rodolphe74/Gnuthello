@@ -22,7 +22,7 @@ int main()
 		// Othello *othello = [[Othello new] autorelease];
 		Othello *othello = [[[Othello alloc] initWithBoard:board] autorelease];
 		[Othello logStroke:[othello stroke]];
-		[othello exoticBlackSearch:5];
+		[othello exoticBlackSearch:3];
 	}
 	return 0;
 }

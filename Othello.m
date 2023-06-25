@@ -60,15 +60,15 @@
 
 - (NSArray <Stroke *> *)listStrokes:(Coord)coord withStroke:(Stroke *)strokeCopy;
 {
-	static Coord allDirections[] = {{-1, 0}, {1, 0}, {0, 1}, {0, -1}};
 	Coord t;
 	NSMutableArray *list = [[NSMutableArray new] autorelease];
 	PIECE color = [strokeCopy board][INDEX(coord.x, coord.y)];
 	PIECE oppositeColor = (color == WHITE) ? BLACK : WHITE;
 
-	for (int d = 0; d < 4; d++) {
+	for (int d = 0; d < /*4*/ 8; d++) {
 		t = coord;
 		bool saveIt = NO;
+		bool exploreFromHere = NO;
 		Stroke *copyOfTheOriginalStroke = [strokeCopy copy];
 
 		for (int i = 0; i < 8; i++) {
@@ -92,14 +92,31 @@
 				break;
 			}
 			else {
+				if (saveIt) {
+					exploreFromHere = YES;
+					NSLog(@"break in %d,%d with direction %d,%d - Save:%d", t.x, t.y, allDirections[d].x, allDirections[d].y, saveIt);
+				}
 				// empty
 				break;
 			}
 		}
 
 		if (saveIt) {
+			
 			// //NSLog(@"save dir %d,%d", allDirections[d].x, allDirections[d].y);
 			[copyOfTheOriginalStroke board][INDEX(t.x, t.y)] = color;
+
+            // before keeping stroke, explore all directions from new piece to the same color
+			// until the same color covering opposite color
+			if (exploreFromHere) {
+				Coord c = {t.x, t.y};
+                NSLog(@"====>");
+                [Othello logStroke:copyOfTheOriginalStroke];
+				Stroke *explored = [self exploreFromHere:c withStroke:copyOfTheOriginalStroke withTurnColor:color];
+				// [Othello logStroke:explored];
+                NSLog(@"");
+			}
+
 			// [Othello logStroke:copyOfTheOriginalStroke];
 			[list addObject:copyOfTheOriginalStroke]; // rc=2
 		}
@@ -107,6 +124,55 @@
 	}
 
 	return list;
+}
+
+- (Stroke *)exploreFromHere:(Coord)here withStroke:(Stroke *)strokeCopy withTurnColor:(PIECE)color
+{
+	Coord t;
+	PIECE oppositeColor = (color == WHITE) ? BLACK : WHITE;
+	Stroke *copyOfTheOriginalStroke = [strokeCopy copy];
+    NSLog(@"exploreFromHere:%d,%d", here.x, here.y);
+
+	for (int d = 0; d < 8; d++) {
+		t = here;
+		bool saveIt = NO;
+		Stroke *currentStroke = [copyOfTheOriginalStroke copy];
+
+		for (int i = 0; i < 8; i++) {
+			t.x += allDirections[d].x;
+			t.y += allDirections[d].y;
+
+			if (t.x > 7 || t.y > 7 || t.x < 0 || t.y < 0) {
+				// frame border
+				saveIt = NO;
+				break;
+			}
+			else if ([currentStroke board][INDEX(t.x, t.y)] == color) {
+				// same color
+				break;
+			}
+			else if ([currentStroke board][INDEX(t.x, t.y)] == oppositeColor) {
+				// opposite color
+				[currentStroke board][INDEX(t.x, t.y)] = color;
+				saveIt = YES;
+				continue;
+			}
+			else {
+				// empty
+				saveIt = NO;
+				break;
+			}
+		}
+
+		if (saveIt) {
+            [Othello logStroke:currentStroke];
+			[copyOfTheOriginalStroke release];
+			copyOfTheOriginalStroke = [currentStroke copy];
+		}
+		[currentStroke release];
+	}
+
+	return [copyOfTheOriginalStroke autorelease];
 }
 
 - (NSArray <Stroke *> *)listStrokesForColor:(PIECE)color withStroke:(Stroke *)strokeCopy
@@ -264,7 +330,7 @@
 			}
 		}
 
-		//NSLog(@"%@", line);
+		NSLog(@"%@", line);
 		[line release];
 	}
 }
