@@ -2,13 +2,13 @@ CC=/usr/bin/clang
 CXX=/usr/bin/clang++
 
 # SOURCES = $(wildcard *.m)
-SOURCES = Main.m MyObject.m Othello.m PdfOut.m Stack.m Stroke.m Tree.m TreeNode.m
+SOURCES = Gnutello.m MyObject.m Othello.m PdfOut.m Stack.m Stroke.m Tree.m TreeNode.m
 OBJECTS = $(SOURCES:.m=.o)
-MAIN = Minimax
-WHERE = Minimax.app
-PLIST = MinimaxInfo.plist
+MAIN = Gnutello
+WHERE = Gnutello.app
+PLIST = GnutelloInfo.plist
 
-CFLAGS = $(shell gnustep-config --objc-flags 2>/dev/null) -g
+CFLAGS = $(shell gnustep-config --objc-flags 2>/dev/null) -g -fno-objc-arc
 LDFLAGS = -Wl,--no-as-needed -lgnustep-base -lobjc -lm pdfgen.o
 
 $(info $$SOURCES is [${SOURCES}])
@@ -23,7 +23,7 @@ main:$($OBJECTS)
 	$(CC) -o $(MAIN) $(LDFLAGS) $(OBJECTS)
 
 run: clean $(OBJECTS) pdfgen main pack
-	./Minimax
+	./Gnutello
 	pdf2svg ./minimax.pdf minimax.svg
 	
 
@@ -56,6 +56,9 @@ stacktest:
 
 strokestest:
 	$(CC) $(CFLAGS) -o StrokesTest $(LDFLAGS) StrokesTest.m Othello.o PdfOut.o Stack.o Stroke.o Tree.o TreeNode.o
+
+minimaxtest:
+	$(CC) $(CFLAGS) -o MinimaxTest $(LDFLAGS) MinimaxTest.m Othello.o PdfOut.o Stack.o Stroke.o Tree.o TreeNode.o
 	
 treetest:$(OBJECTS)
 	$(CC) $(CFLAGS) -o TreeTest $(LDFLAGS) TreeTest.m TreeNode.o Stack.o

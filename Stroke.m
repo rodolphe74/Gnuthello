@@ -12,7 +12,7 @@
 - (id)init
 {
 	if (self = [super init]) {
-		// NSLog(@"Stroke init at %p", self);
+		//NSLog(@"Stroke init at %p", self);
 		board = (PIECE *)malloc(sizeof(PIECE) * 8 * 8);
 	}
 	return self;
@@ -27,14 +27,18 @@
 
 - (NSUInteger)hash
 {
-	if (self == nil) return 0;
+	if (self == nil) {
+		return 0;
+	}
 
-    NSUInteger result = 1;
-    for (int i = 0; i < 8*8; i++) {
-        result = 31 * result + board[i];
-    }
-    // NSLog(@"Hash:%lu", result);
-    return result;
+	NSUInteger result = 1;
+
+	for (int i = 0; i < 8 * 8; i++) {
+		result = 31 * result + board[i];
+	}
+
+	// NSLog(@"Hash:%lu", result);
+	return result;
 }
 
 - (BOOL)isEqual:(id)object

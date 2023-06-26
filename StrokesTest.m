@@ -28,21 +28,21 @@ int main(void)
 	@autoreleasepool {
 		// Testing equality
 		Othello *o = [[[Othello alloc] initWithBoard:board] autorelease];
-        Othello *o2 = [[[Othello alloc] initWithBoard:anotherBoard] autorelease];
-        if ([[o stroke] isEqual: [o2 stroke]]) {
-            NSLog(@"Equal");
-        }
+		Othello *o2 = [[[Othello alloc] initWithBoard:anotherBoard] autorelease];
 
-        NSMutableSet *similarStrokes = [NSMutableSet new];
-        [similarStrokes addObject:[o stroke]];
-        [similarStrokes addObject:[o2 stroke]];
-        NSLog(@"Set size:%lu", [similarStrokes count]);
-        [similarStrokes release];
+		if ([[o stroke] isEqual:[o2 stroke]]) {
+			NSLog(@"Equal");
+		}
 
+		NSMutableSet *similarStrokes = [NSMutableSet new];
+		[similarStrokes addObject:[o stroke]];
+		[similarStrokes addObject:[o2 stroke]];
+		NSLog(@"Set size:%lu", [similarStrokes count]);
+		[similarStrokes release];
 
 		// Testing strokes generation
 		[Othello logStroke:[o stroke]];
-        NSLog(@"");
+		NSLog(@"");
 
 		NSArray *moves = [o listStrokesForColor:BLACK withStroke:[o stroke]];
 

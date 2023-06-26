@@ -9,7 +9,7 @@
 
 - (id)init
 {
-	//NSLog(@"Othello init");
+	NSLog(@"Othello init");
 
 	if (self = [super init]) {
 		stack = [Stack new];
@@ -50,7 +50,7 @@
 
 - (void)dealloc
 {
-	//NSLog(@"Othello dealloc");
+	NSLog(@"Othello dealloc");
 	[stack release];
 	[stroke release];
 	[super dealloc];
@@ -102,26 +102,27 @@
 		}
 
 		if (saveIt) {
-			
 			// //NSLog(@"save dir %d,%d", allDirections[d].x, allDirections[d].y);
-           	[copyOfTheOriginalStroke board][INDEX(t.x, t.y)] = color;
-            
-            // before keeping stroke, explore all directions from new piece to the same color
+			[copyOfTheOriginalStroke board][INDEX(t.x, t.y)] = color;
+
+			// before keeping stroke, explore all directions from new piece to the same color
 			// until the same color covering opposite color
 			if (exploreFromHere) {
-                //NSLog(@"====>");
-                Coord c = {t.x, t.y};
-                // [Othello logStroke:copyOfTheOriginalStroke];
+				//NSLog(@"====>");
+				Coord c = {t.x, t.y};
+				// [Othello logStroke:copyOfTheOriginalStroke];
 				Stroke *explored = [self exploreFromHere:c withStroke:copyOfTheOriginalStroke withTurnColor:color];
-                                [explored setFrom:coord];
-                [explored setTo:c];
-                if ([similarStrokes containsObject:explored] == NO)
-                    [list addObject:explored]; // autoreleased && rc++
-                [similarStrokes addObject:explored];
-                NSLog(@"similar:%lu", [similarStrokes count]);
+				[explored setFrom:coord];
+				[explored setTo:c];
+
+				if ([similarStrokes containsObject:explored] == NO) {
+					[list addObject:explored]; // autoreleased && rc++
+				}
+				[similarStrokes addObject:explored];
+				// NSLog(@"similar:%lu", [similarStrokes count]);
 
 				// [Othello logStroke:explored];
-                //NSLog(@"");
+				//NSLog(@"");
 			}
 
 			// [Othello logStroke:copyOfTheOriginalStroke];
@@ -138,7 +139,8 @@
 	Coord t;
 	PIECE oppositeColor = (color == WHITE) ? BLACK : WHITE;
 	Stroke *copyOfTheOriginalStroke = [strokeCopy copy];
-    // NSLog(@"exploreFromHere:%d,%d", here.x, here.y);
+
+	// NSLog(@"exploreFromHere:%d,%d", here.x, here.y);
 
 	for (int d = 0; d < 8; d++) {
 		t = here;
@@ -172,7 +174,7 @@
 		}
 
 		if (saveIt) {
-            // [Othello logStroke:currentStroke];
+			// [Othello logStroke:currentStroke];
 			[copyOfTheOriginalStroke release];
 			copyOfTheOriginalStroke = [currentStroke copy];
 		}
@@ -186,6 +188,7 @@
 {
 	NSMutableArray *list = [NSMutableArray new];
 	NSMutableSet *set = [NSMutableSet new];
+
 	@autoreleasepool {
 		for (int y = 0; y < 8; y++) {
 			for (int x = 0; x < 8; x++) {
@@ -201,7 +204,7 @@
 	return [list autorelease];
 }
 
-- (void)exoticBlackSearch:(int)depth
+- (void)exoticBlackSearch:(int)depth withOutputTree:(bool)output
 {
 	Stack *s = [[Stack alloc]  init];
 
@@ -218,12 +221,15 @@
 	[rootStroke setParent:[t root]];
 	[s push:rootStroke];
 
-	@autoreleasepool {
+    GSDebugAllocationActive(YES);
+
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	//@autoreleasepool {
 		// purge autoreleased moves lists at every search
 		while ([s count] > 0) {
 			Stroke *stk = [s pop];
 			//NSLog(@"popped depth:%d", [stk depth]);
-			[Othello logStroke:stk];
+			// [Othello logStroke:stk];
 
 			// build tree
 			int turn = (([stk depth] % 2 == 1) ? BLACK : WHITE);
@@ -259,19 +265,31 @@
 			}
 		}
 
-		NSMutableString *indentString = [[NSMutableString alloc] initWithString:@""];
+        /*
+        const char *alloc = GSDebugAllocationListAll();
+        printf("Inside pool:%s\n", alloc);
+        */
 
-		[Tree debugTree:[t root] withIndent:indentString isLast:YES];
+		// NSMutableString *indentString = [[NSMutableString alloc] initWithString:@""];
+		//[Tree debugTree:[t root] withIndent:indentString isLast:YES];
 		[[t root] setStrValue:@"ROOT"];
 
 		[self windupScores:t];
 
-		PdfOut *pdfOut = [[PdfOut alloc] initWithDepth:depth];
+		if (output) {
+			PdfOut *pdfOut = [[PdfOut alloc] initWithDepth:depth];
 
-		[pdfOut drawTree:[t root] fromAngle:0 toAngle:2 * M_PI showStrokes:YES];
-		[pdfOut save:@"minimax.pdf"];
-		[pdfOut release];
-	}
+			[pdfOut drawTree:[t root] fromAngle:0 toAngle:2 * M_PI showStrokes:YES];
+			[pdfOut save:@"minimax.pdf"];
+			[pdfOut release];
+		}
+	//}
+	Class klassStroke = NSClassFromString(@"Stroke");
+    printf("Inside pool Stroke:%d\n", GSDebugAllocationCount(klassStroke));
+    [pool drain];
+    // const char *alloc = GSDebugAllocationListAll();
+    printf("Outside pool Stroke:%d\n", GSDebugAllocationCount(klassStroke));
+    GSDebugAllocationActive(NO);
 
 	[t release];
 	[s release];
@@ -323,7 +341,8 @@
 
 + (void)logStroke:(Stroke *)s
 {
-    NSLog(@"[%d,%d] -> [%d,%d]", [s from].x, [s from].y, [s to].x, [s to].y);
+	NSLog(@"[%d,%d] -> [%d,%d]", [s from].x, [s from].y, [s to].x, [s to].y);
+
 	for (int y = 0; y < 8; y++) {
 		NSMutableString *line = [[NSMutableString alloc] initWithString:@""];
 
