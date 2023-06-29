@@ -11,6 +11,17 @@ PLIST = GnutelloInfo.plist
 CFLAGS = $(shell gnustep-config --objc-flags 2>/dev/null) -g -fno-objc-arc
 LDFLAGS = -Wl,--no-as-needed -lgnustep-base -lobjc -lm pdfgen.o
 
+GUI_SOURCES = GuiMain.m GnuController.m GnuView.m GnuWindow.m
+GUI_OBJECTS = $(GUI_SOURCES:.m=.o)
+
+
+MAIN = Minimax
+WHERE = Minimax.app
+PLIST = MinimaxInfo.plist
+
+CFLAGS = $(shell gnustep-config --objc-flags 2>/dev/null) -g
+LDFLAGS = -Wl,--no-as-needed -lgnustep-base -lgnustep-gui -lobjc -lm pdfgen.o
+
 $(info $$SOURCES is [${SOURCES}])
 $(info $$OBJECTS is [${OBJECTS}])
 
@@ -19,8 +30,15 @@ all: $(OBJECTS) pdfgen main pack
 $(OBJECTS): %.o : %.m
 	$(CC) $(CFLAGS) -c $< -o $@
 
-main:$($OBJECTS)
+$(GUI_OBJECTS): %.o : %.m
+	$(CC) $(CFLAGS) -c $< -o $@
+
+main:$(OBJECTS)
 	$(CC) -o $(MAIN) $(LDFLAGS) $(OBJECTS)
+
+gui:$(GUI_OBJECTS)
+	$(CC) -o GuiMain $(LDFLAGS) $(GUI_OBJECTS)
+
 
 run: clean $(OBJECTS) pdfgen main pack
 	./Gnutello
