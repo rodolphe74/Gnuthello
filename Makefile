@@ -15,9 +15,9 @@ GUI_SOURCES = GuiMain.m GnuController.m GnuView.m GnuWindow.m
 GUI_OBJECTS = $(GUI_SOURCES:.m=.o)
 
 
-MAIN = Minimax
-WHERE = Minimax.app
-PLIST = MinimaxInfo.plist
+MAIN = Gnutello
+WHERE = Gnutello.app
+PLIST = GnutelloInfo.plist
 
 CFLAGS = $(shell gnustep-config --objc-flags 2>/dev/null) -g
 LDFLAGS = -Wl,--no-as-needed -lgnustep-base -lgnustep-gui -lobjc -lm pdfgen.o
@@ -40,7 +40,8 @@ gui:$(GUI_OBJECTS) pdfgen
 	$(CC) -o GuiMain $(LDFLAGS) $(GUI_OBJECTS)
 
 
-run: clean $(OBJECTS) pdfgen main pack
+# run: clean $(OBJECTS) pdfgen main pack
+run: clean main pack
 	./Gnutello
 	pdf2svg ./minimax.pdf minimax.svg
 	
