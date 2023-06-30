@@ -221,75 +221,77 @@
 	[rootStroke setParent:[t root]];
 	[s push:rootStroke];
 
-    GSDebugAllocationActive(YES);
+	GSDebugAllocationActive(YES);
 
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+
 	//@autoreleasepool {
-		// purge autoreleased moves lists at every search
-		while ([s count] > 0) {
-			Stroke *stk = [s pop];
-			//NSLog(@"popped depth:%d", [stk depth]);
-			// [Othello logStroke:stk];
+	// purge autoreleased moves lists at every search
+	while ([s count] > 0) {
+		Stroke *stk = [s pop];
+		//NSLog(@"popped depth:%d", [stk depth]);
+		// [Othello logStroke:stk];
 
-			// build tree
-			int turn = (([stk depth] % 2 == 1) ? BLACK : WHITE);
-			NSArray *moves = [self listStrokesForColor:turn withStroke:stk];
-			int eval = [stk evaluate:[moves count] withTurn:turn];
-			[stk setEvaluation:eval];
-			TreeNode *tn = [[[TreeNode alloc] initWithInt:eval] autorelease];
-			[tn setStrValue:[NSString stringWithFormat:@"%d", count++]];
-			[tn setIValue:eval];
-			[tn setObject:stk];
-			[tn setDepth:[stk depth]];
-			[t addChild:[stk parent] withChild:tn];
-			[stk setParent:tn];
+		// build tree
+		int turn = (([stk depth] % 2 == 1) ? BLACK : WHITE);
+		NSArray *moves = [self listStrokesForColor:turn withStroke:stk];
+		int eval = [stk evaluate:[moves count] withTurn:turn];
+		[stk setEvaluation:eval];
+		TreeNode *tn = [[[TreeNode alloc] initWithInt:eval] autorelease];
+		[tn setStrValue:[NSString stringWithFormat:@"%d", count++]];
+		[tn setIValue:eval];
+		[tn setObject:stk];
+		[tn setDepth:[stk depth]];
+		[t addChild:[stk parent] withChild:tn];
+		[stk setParent:tn];
 
-			if ([stk depth] == depth) {
-				// stop pushing
-				//NSLog(@"Depth:%d  eval:%d  stack:%d", depth, eval, [s count]);
-			}
-			else {
-				// BLACK or WHITE ? [stk depth odd or not]
-				//NSLog(@"Color %d", /*(([stk depth] % 2 == 0) ? BLACK : WHITE)*/ turn);
-				// NSArray *moves = [self listStrokesForColor:(([stk depth] % 2 == 0) ? BLACK : WHITE) withStroke:stk];
-				//NSLog(@"moves %lu", [moves count]);
+		if ([stk depth] == depth) {
+			// stop pushing
+			//NSLog(@"Depth:%d  eval:%d  stack:%d", depth, eval, [s count]);
+		}
+		else {
+			// BLACK or WHITE ? [stk depth odd or not]
+			//NSLog(@"Color %d", /*(([stk depth] % 2 == 0) ? BLACK : WHITE)*/ turn);
+			// NSArray *moves = [self listStrokesForColor:(([stk depth] % 2 == 0) ? BLACK : WHITE) withStroke:stk];
+			//NSLog(@"moves %lu", [moves count]);
 
-				for (int i = 0; i < [moves count]; i++) {
-					Stroke *currentStk = [moves objectAtIndex:i];
-					[currentStk setDepth:[stk depth] + 1];
-					[currentStk setParent:[stk parent]];
-					// save previous (stk) in currentStk
-					//NSLog(@"inserting previous stroke at %d", [stk depth] - 1);
-					[s push:currentStk];
-				}
+			for (int i = 0; i < [moves count]; i++) {
+				Stroke *currentStk = [moves objectAtIndex:i];
+				[currentStk setDepth:[stk depth] + 1];
+				[currentStk setParent:[stk parent]];
+				// save previous (stk) in currentStk
+				//NSLog(@"inserting previous stroke at %d", [stk depth] - 1);
+				[s push:currentStk];
 			}
 		}
+	}
 
-        /*
-        const char *alloc = GSDebugAllocationListAll();
-        printf("Inside pool:%s\n", alloc);
-        */
+	/*
+	 *  const char *alloc = GSDebugAllocationListAll();
+	 *  printf("Inside pool:%s\n", alloc);
+	 */
 
-		// NSMutableString *indentString = [[NSMutableString alloc] initWithString:@""];
-		//[Tree debugTree:[t root] withIndent:indentString isLast:YES];
-		[[t root] setStrValue:@"ROOT"];
+	// NSMutableString *indentString = [[NSMutableString alloc] initWithString:@""];
+	//[Tree debugTree:[t root] withIndent:indentString isLast:YES];
+	[[t root] setStrValue:@"ROOT"];
 
-		[self windupScores:t];
+	[self windupScores:t];
 
-		if (output) {
-			PdfOut *pdfOut = [[PdfOut alloc] initWithDepth:depth];
+	if (output) {
+		PdfOut *pdfOut = [[PdfOut alloc] initWithDepth:depth];
 
-			[pdfOut drawTree:[t root] fromAngle:0 toAngle:2 * M_PI showStrokes:YES];
-			[pdfOut save:@"minimax.pdf"];
-			[pdfOut release];
-		}
+		[pdfOut drawTree:[t root] fromAngle:0 toAngle:2 * M_PI showStrokes:YES];
+		[pdfOut save:@"minimax.pdf"];
+		[pdfOut release];
+	}
 	//}
 	Class klassStroke = NSClassFromString(@"Stroke");
-    printf("Inside pool Stroke:%d\n", GSDebugAllocationCount(klassStroke));
-    [pool drain];
-    // const char *alloc = GSDebugAllocationListAll();
-    printf("Outside pool Stroke:%d\n", GSDebugAllocationCount(klassStroke));
-    GSDebugAllocationActive(NO);
+
+	printf("Inside pool Stroke:%d\n", GSDebugAllocationCount(klassStroke));
+	[pool drain];
+	// const char *alloc = GSDebugAllocationListAll();
+	printf("Outside pool Stroke:%d\n", GSDebugAllocationCount(klassStroke));
+	GSDebugAllocationActive(NO);
 
 	[t release];
 	[s release];

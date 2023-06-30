@@ -17,17 +17,16 @@ PIECE board[64] = {
 
 int main()
 {
-    //NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    
-    
+	//NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+
 	@autoreleasepool {
 		// Minimax && Pdf output tree
 		Othello *othello = [[[Othello alloc] initWithBoard:board] autorelease];
 		[Othello logStroke:[othello stroke]];
-        [othello exoticBlackSearch:6 withOutputTree:NO];
+		[othello exoticBlackSearch:6 withOutputTree:NO];
 	}
-	
-    //[pool drain];
-    getchar();
+
+	//[pool drain];
+	getchar();
 	return 0;
 }

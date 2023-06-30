@@ -1,30 +1,36 @@
-
 #import "GnuController.h"
 
 @implementation GnuController
 
--(id) init
+- (id)init
 {
-  return self;
+	return self;
 }
 
--(void) dealloc
+- (void)dealloc
 {
-  [super dealloc];
+	NSLog(@"GnuController dealloc");
+	[super dealloc];
 }
 
-- (void)applicationDidFinishLaunching: (NSNotification *)aNotification;
+- (void)applicationDidFinishLaunching:(NSNotification *)aNotification;
 {
-  [self startNewFractalWindow: nil];
+	[self startNewGnuWindow:nil];
 }
 
-- (void)startNewFractalWindow: (id)sender
+- (void)startNewGnuWindow:(id)sender
 {
-  int tag;
-  tag = (sender==nil ? DEFAULT_TYPE:[sender tag]);
-  
-  [[GnuWindow alloc] initWithType:tag];
+	mainWindow = [[GnuWindow alloc] init];
+}
+
+- (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)app {
+	return YES;
+}
+
+- (void)applicationWillTerminate:(NSNotification *)aNotification {
+	NSLog(@"NSLog applicationWillTerminate");
+	[mainWindow release];
+	[self release];
 }
 
 @end
-

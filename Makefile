@@ -36,7 +36,7 @@ $(GUI_OBJECTS): %.o : %.m
 main:$(OBJECTS)
 	$(CC) -o $(MAIN) $(LDFLAGS) $(OBJECTS)
 
-gui:$(GUI_OBJECTS)
+gui:$(GUI_OBJECTS) pdfgen
 	$(CC) -o GuiMain $(LDFLAGS) $(GUI_OBJECTS)
 
 
