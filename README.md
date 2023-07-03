@@ -11,7 +11,7 @@ sudo apt install pdf2svg
 # install clang compiler
 sudo apt install clang
 
-# some variables need maybe to be set (at least on my mint linux for clang to compile)
+# some variables need maybe to be set (at least on my Mint Linux for clang to compile)
 export CC=/usr/bin/clang
 export CXX=/usr/bin/clang++
 export CPLUS_INCLUDE_PATH=/usr/include/c++/11:/usr/include/x86_64-linux-gnu/c++/11
