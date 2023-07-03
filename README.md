@@ -63,7 +63,6 @@ int main()
 {
 	@autoreleasepool {
 		// Minimax && Pdf output tree
-		// Othello *othello = [[Othello new] autorelease];
 		Othello *othello = [[[Othello alloc] initWithBoard:board] autorelease];
 		[Othello logStroke:[othello stroke]];
 		[othello exoticBlackSearch:3 withOutputTree:YES];
