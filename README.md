@@ -76,5 +76,5 @@ int main()
 ```shell
 make run
 ```
-
+## Result
 ![Minimax tree](./minimax.svg)
