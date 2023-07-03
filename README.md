@@ -16,7 +16,7 @@ export CC=/usr/bin/clang
 export CXX=/usr/bin/clang++
 export CPLUS_INCLUDE_PATH=/usr/include/c++/11:/usr/include/x86_64-linux-gnu/c++/11
 export LIBRARY_PATH=$LIBRARY_PATH:/usr/lib/gcc/x86_64-linux-gnu/11
-``
+```
 
 ```shell
 # clone libobjc2
