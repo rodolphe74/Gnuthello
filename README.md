@@ -25,8 +25,9 @@ cd libobjc2
 git submodule update --init
 ```
 
-edit CMakeLists.txt and comment line 189:
+
 ```shell
+# edit CMakeLists.txt and comment line 189:
 # set(INSTALL_TARGET objc)
 ```
 
