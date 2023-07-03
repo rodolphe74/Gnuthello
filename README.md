@@ -1,5 +1,5 @@
 # Gnuthello
-Othello Minimax tree visualization in GNUStep Objective C in a exotic iterative way (no recursion) and from a black point of view.
+Othello Minimax tree visualization in GNUStep Objective C in a iterative way (no recursion) and from a black point of view.
 
 ## Prepare Linux environnement
 
