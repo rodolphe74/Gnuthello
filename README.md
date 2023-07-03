@@ -41,7 +41,7 @@ sudo make install
 ```
 
 # Run a minimax sample
-```
+```objc
 #import <Foundation/Foundation.h>
 #import <math.h>
 #import "Othello.h"
