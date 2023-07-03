@@ -12,7 +12,7 @@ main(int argc, const char **argv)
 	GnuController *controller;
 
 	app = [NSApplication sharedApplication];
-	controller = [GnuController new]; // released in self:applicationWillTerminate
+	controller = [GnuController new];   // released in self:applicationWillTerminate
 	[app setDelegate:controller];
 	[app run];
 	return 0;
