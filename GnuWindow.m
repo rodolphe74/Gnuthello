@@ -6,7 +6,7 @@
 {
 	if ((self = [super init]) != nil) {
 		NSRect frame;
-		int m = (NSTitledWindowMask | NSClosableWindowMask | /*NSResizableWindowMask |*/
+		int m = (NSTitledWindowMask | NSClosableWindowMask | NSResizableWindowMask |
 			NSMiniaturizableWindowMask);
 
 		view = [[GnuView alloc] init];
@@ -27,7 +27,8 @@
 		[window setContentView:view];
 		[window setReleasedWhenClosed:YES];
 
-		[window setContentSize:NSMakeSize(640, 640)];
+		// [window setContentSize:NSMakeSize(640, 640)];
+		
 		[window center];
 		[window orderFrontRegardless];
 		[window makeKeyWindow];

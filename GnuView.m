@@ -2,6 +2,15 @@
 
 @implementation GnuView
 
+- (id)init
+{
+	if ((self = [super init]) != nil) {
+	    NSLog(@"GnuView init");
+	    [self setFrameSize:NSMakeSize(640, 640)];
+	}
+    return self;
+}
+
 - (void)update
 {}
 
