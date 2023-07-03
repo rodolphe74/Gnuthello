@@ -1,7 +1,7 @@
 # Gnuthello
 Othello Minimax tree visualization in GNUStep Objective C (from a black point of view).
 
-# Prepare Linux environnement
+## Prepare Linux environnement
 
 ```shell
 # install gnustep develop librairies and pdf tools
@@ -40,7 +40,7 @@ make
 sudo make install
 ```
 
-# Run a minimax sample
+## Run a minimax sample
 ```objc
 #import <Foundation/Foundation.h>
 #import <math.h>
